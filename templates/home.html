@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать на сайт Lcoin!</h1>
+        <div class="buttons">
+            <a href="{% url 'users:login' %}" class="btn">Вход</a>
+            <a href="{% url 'users:register' %}" class="btn">Регистрация</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-container {
+    width: 400px;
+    margin: 80px auto;
+    text-align: center;
+}
+
+.profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.coins {
+    color: #fbc531;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: #0984e3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background: #74b9ff;
+}
+
+.logout-btn {
+    background: #d63031;
+}
+
+.logout-btn:hover {
+    background: #ff7675;
+}

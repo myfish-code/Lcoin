@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Поиск домашних заданий</title>
+    <link rel="stylesheet" href="{% static "css/search.css" %}"
+</head>
+<body>
+    <a href="{% url 'users:profile' %}"> Профиль </a>
+    <h1>Поиск домашних заданий</h1>
+    <form method="get">
+        <input type="text" name="query" placeholder="Введите ключевое слово">
+        <button type="submit">Найти</button>
+    </form>
+
+    <ul>
+        {% for order in orders %}
+            <li> {{ order.name }} - {{ order.subject }} - {{ order.price }}₴ </li>
+        {% empty %}
+            <li> Заказов нет! </li>
+        {% endfor %}
+    </ul>
+
+
+        
+        
+    
+</body>
+</html>

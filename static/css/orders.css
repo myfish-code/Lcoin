@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.orders ul {
+    list-style: none;
+    padding: 0;
+}
+
+.orders li {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s;
+}
+
+.orders li:hover {
+    background-color: #f0f0f0;
+}
+
+.order-name {
+    font-weight: bold;
+}
+
+.order-subject {
+    font-style: italic;
+    color: #666;
+}
+
+.order-price {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.create-order {
+    margin-top: 30px;
+}
+
+.create-order form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.create-order input, .create-order select {
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.create-order button {
+    padding: 10px;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.create-order button:hover {
+    background-color: #218838;
+}

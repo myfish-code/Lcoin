@@ -19,6 +19,10 @@
 
         <a href="/" class="btn">На главную</a>
         <br><br>
+        <a href="{% url 'homework:search' %}" class="btn">Поиск заказов</a>
+        <br><br>
+        <a href="{% url 'homework:orders' %}" class="btn">Мои заказы</a>
+        <br><br>
         <a href="{% url 'users:logout' %}" class="btn logout-btn">Выйти</a>
     </div>
 

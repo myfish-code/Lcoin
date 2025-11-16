@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои заказы</title>
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Мои заказы</h1>
+
+        <!-- Список заказов -->
+        <div class="orders">
+            {% if orders %}
+                <ul>
+                {% for order in orders %}
+                    <li>
+                        <span class="order-name">{{ order.name }}</span>
+                        <span class="order-subject">{{ order.subject }}</span>
+                        <span class="order-price">{{ order.price }} coins</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>У вас ещё нет заказов</p>
+            {% endif %}
+        </div>
+
+        <!-- Форма создания нового заказа -->
+        <div class="create-order">
+            <h2>Создать новый заказ</h2>
+            <form method="post">
+                {% csrf_token %}
+            
+                <input type="text" name="name" placeholder="Название заказа" required><br><br>
+            
+                <select name="subject" required>
+                    <option value="">Выберите предмет</option>
+                    <option value="math">Математика</option>
+                    <option value="eng">Английский</option>
+                    <option value="phys">Физика</option>
+                    <option value="chem">Химия</option>
+                    <!-- добавь другие темы по необходимости -->
+                </select><br><br>
+                
+                <textarea name="description" placeholder="Описание задания" rows="4" required></textarea><br><br>
+
+                <input type="number" name="price" placeholder="Цена" required><br><br>
+            
+                <input type="number" name="deadline_time" placeholder="Срок в днях" required><br><br>
+            
+                <button type="submit">Создать заказ</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

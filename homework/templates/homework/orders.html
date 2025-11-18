@@ -8,6 +8,8 @@
 </head>
 <body>
     <div class="container">
+        <a href="{% url 'users:profile' %}" class="profile-link"> Профиль </a>
+        <h1>Мой баланс: {{ coins }} coins</h1>
         <h1>Мои заказы</h1>
 
         <!-- Список заказов -->
@@ -19,6 +21,11 @@
                         <span class="order-name">{{ order.name }}</span>
                         <span class="order-subject">{{ order.subject }}</span>
                         <span class="order-price">{{ order.price }} coins</span>
+                        <form action="{% url 'homework:order_delete' order.id %}" method="POST" style="display:inline;">
+                            {%  csrf_token  %}
+                            <button type="submit" class="delete-btn"> Удалить</button>
+                        </form>
+
                     </li>
                 {% endfor %}
                 </ul>
@@ -30,6 +37,11 @@
         <!-- Форма создания нового заказа -->
         <div class="create-order">
             <h2>Создать новый заказ</h2>
+
+            {% if error_message %}
+                <p class="error">{{ error_message }}</p>
+            {% endif %}
+
             <form method="post">
                 {% csrf_token %}
             

@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 700px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.bids-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bid-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.bid-card p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 1.05em;
+}
+
+.bid-card a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.bid-card a:hover {
+    text-decoration: underline;
+}
+
+.no-bids {
+    text-align: center;
+    font-size: 1.1em;
+    color: #888;
+}

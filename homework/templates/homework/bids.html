@@ -1,0 +1,32 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Мои ставки</title>
+    <link rel="stylesheet" href="{% static 'css/bids.css' %}">
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'users:profile' %}" class="back-link">&larr; Назад в профиль</a>
+        <h1>Мои ставки</h1>
+
+        <div class="bids-list">
+            {% for bid in bids %}
+            <div class="bid-card">
+                <p><strong>Заказ:</strong> <a href="{% url 'homework:order_detail' bid.order.id %}">{{ bid.order.name }}</a></p>
+                <p><strong>Описание отклика:</strong> {{ bid.description }}</p>
+                <p><strong>Цена:</strong> {{ bid.price }} coins</p>
+                <p><strong>Срок выполнения:</strong> {{ bid.days_to_complete }} дней</p>
+                <p><strong>Статус:</strong> {{ bid.get_status_display }}</p>
+                                                    <!-- get_status_display выдает значения а не ключи словаря --> 
+            </div>
+            {% empty %}
+            <p class="no-bids">Вы ещё не делали ставок.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

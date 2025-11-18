@@ -1,0 +1,167 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 700px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.order-card {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.order-card p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    color: #555;
+}
+
+.order-card .price {
+    font-weight: bold;
+    color: #007BFF;
+    font-size: 1.2em;
+}
+
+.actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.btn-bid {
+    background-color: #007BFF; /* синий для ставки */
+}
+
+.btn-bid:hover {
+    background-color: #0056b3;
+}
+
+/* Контейнер формы ставки */
+#bid-form-container {
+    display: none; /* изначально скрыт */
+    background-color: #f9f9f9; /* совпадает с order-card */
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Подписи к полям */
+#bid-form-container label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Поля ввода и textarea */
+#bid-form-container input[type="number"],
+#bid-form-container textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Кнопка отправки формы */
+#bid-form-container .btn-bid {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007BFF; /* совпадает с твоим синим для ставки */
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* Наведение на кнопку */
+#bid-form-container .btn-bid:hover {
+    background-color: #0056b3;
+}
+
+.bids-section {
+    margin-top: 40px;
+}
+
+.bids-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.bid-card {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bid-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.bid-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.bid-card strong {
+    color: #007BFF;
+}
+
+.no-bids {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+    margin-top: 20px;
+}

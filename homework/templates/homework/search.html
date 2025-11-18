@@ -4,19 +4,30 @@
 <html>
 <head>
     <title>Поиск домашних заданий</title>
-    <link rel="stylesheet" href="{% static "css/search.css" %}"
+    <link rel="stylesheet" href="{% static "css/search.css" %}">
 </head>
 <body>
-    <a href="{% url 'users:profile' %}"> Профиль </a>
+    <br>
+    <a href="{% url 'users:profile' %}" class="profile-link"> Профиль </a>
     <h1>Поиск домашних заданий</h1>
     <form method="get">
         <input type="text" name="query" placeholder="Введите ключевое слово">
         <button type="submit">Найти</button>
     </form>
 
-    <ul>
+    <ul class="orders-list">
+        
         {% for order in orders %}
-            <li> {{ order.name }} - {{ order.subject }} - {{ order.price }}₴ </li>
+            <li>
+
+                <a href="{% url 'homework:order_detail' order.id%}" class="order-card">
+                    <strong>{{ order.name }}</strong><br>
+                    {{ order.subject }}<br>
+                    <span class="price">{{ order.price }} coins</span>
+            
+                </a>
+            </li>
+
         {% empty %}
             <li> Заказов нет! </li>
         {% endfor %}

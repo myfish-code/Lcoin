@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ: {{ order.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/order_detail.css' %}">
+</head>
+<body>
+    
+
+    <div class="container">
+        <a href="{% url 'homework:search' %}" class="back-link">&larr; Назад к поиску</a>
+        <h1>{{ order.name }}</h1>
+
+        <div class="order-card">
+            <p><strong>Предмет:</strong> {{ order.subject }}</p>
+            <p><strong>Описание:</strong> {{ order.description }}</p>
+            <p><strong>Цена:</strong> <span class="price">{{ order.price }} coins</span></p>
+            <p><strong>Дата создания:</strong> {{ order.created_at }}</p>
+            <p><strong>Дней до конца:</strong> {{ order.deadline_time }}</p>
+        </div>
+
+        <!-- Дополнительно можно добавить кнопку для связи или редактирования -->
+        <div class="actions">
+            
+            <a href="#" class="btn">Связаться с автором</a>
+
+        </div>
+
+        <div class="actions">
+            <a href="#" id="show-bid-form" class="btn btn-bid">Сделать ставку</a>
+        </div>
+
+
+        <div id="bid-form-container" style="display:none; margin-top:20px;">
+            <form method="POST" action="{% url 'homework:create_bid' order.id %}">
+                {% csrf_token %}
+                <label for="description">Описание отклика:</label><br>
+                <textarea name="description" id="description" rows="3" required></textarea><br>
+        
+                <label for="price">Цена (coins):</label><br>
+                <input type="number" name="price" id="price" min="1" required><br>
+        
+                <label for="days">Срок выполнения (дней):</label><br>
+                <input type="number" name="days_to_complete" id="days" min="1" required><br><br>
+        
+                <button type="submit" class="btn btn-bid">Отправить ставку</button>
+            </form>
+        </div>
+        
+        <div class="bids-section">
+            <h2>Отклики на заказ</h2>
+            
+            {% for bid in bids %}
+                <div class="bid-card">
+                    <p><strong>Исполнитель:</strong> {{ bid.author.username }}</p>
+                    <p><strong>Описание:</strong> {{ bid.description }}</p>
+                    <p><strong>Цена:</strong> {{ bid.price }} coins</p>
+                    <p><strong>Срок выполнения:</strong> {{ bid.days_to_complete }} дней</p>
+                    <p><strong>Статус:</strong> {{ bid.get_status_display }}</p>
+                </div>
+            {% empty %}
+                <p class="no-bids">Пока нет откликов на этот заказ.</p>
+            {% endfor %}
+        </div>
+        
+    </div>
+
+    <script src="{% static 'js/order_detail.js' %}"></script>
+</body>
+</html>

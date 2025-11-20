@@ -89,23 +89,12 @@ button:hover {
 }
 
 
-.profile-link {
-    display: inline-block;          /* превращаем в блочную ссылку для удобного padding */
-    padding: 10px 20px;             /* внутренние отступы */
-    background-color: #007BFF;      /* синий фон */
-    color: white;                    /* белый текст */
-    text-decoration: none;           /* убираем стандартное подчёркивание */
+.back-link {
+    margin-left: 10px;
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #007BFF;
     font-weight: bold;
-    border-radius: 8px;             /* скругленные углы */
-    transition: background-color 0.3s, transform 0.2s;
-    margin-bottom: 20px;            /* отступ от верхнего контента */
 }
 
-.profile-link:hover {
-    background-color: #0056b3;      /* темнее при наведении */
-    transform: translateY(-2px);    /* лёгкий эффект поднятия */
-}
-
-.profile-link:active {
-    transform: translateY(0);       /* при клике возвращается на место */
-}

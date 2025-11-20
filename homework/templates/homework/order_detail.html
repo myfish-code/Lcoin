@@ -55,7 +55,13 @@
             
             {% for bid in bids %}
                 <div class="bid-card">
-                    <p><strong>Исполнитель:</strong> {{ bid.author.username }}</p>
+                    <p><strong>Исполнитель:</strong> 
+                        {% if bid.author != request.user %}
+                            <a href="{% url 'chat:create_chat' bid.author.id %}">{{ bid.author.username }}</a>
+                        {% else %}
+                            {{bid.author.username}}
+                        {% endif %}
+                    </p>
                     <p><strong>Описание:</strong> {{ bid.description }}</p>
                     <p><strong>Цена:</strong> {{ bid.price }} coins</p>
                     <p><strong>Срок выполнения:</strong> {{ bid.days_to_complete }} дней</p>

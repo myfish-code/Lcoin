@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои чаты</title>
+    <link rel="stylesheet" href="{% static 'css/list_chats.css' %}">
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'users:profile' %}" class="back-link">&larr;Назад в профиль</a>
+        <h1>Мои чаты</h1>
+
+        {% for chat in chats %}
+        <a href="{% url 'chat:chat_detail' chat.id%}" class="chat-card">
+            <div class="chat-info">
+                <span class="chat-user">
+                    {% if chat.user1 == request.user %}
+                        {{ chat.user2.username }}
+                    {% else %}
+                        {{ chat.user1.username }}
+                    {% endif %}
+                </span>
+                <span class="chat-last-message">
+                    {% if chat.last_message %}
+                        {{ chat.last_message.text|truncatechars:50 }}
+                    {% else %}
+                        Нет сообщений
+                    {% endif %}
+                </span>
+            </div>
+            <span class="chat-date">
+                {% if chat.last_message %}
+                    {{ chat.last_message.created_at|date:"d.m.Y H:i" }}
+                {% endif %}
+            </span>
+        </a>
+        {% empty %}
+        <p class="no-chats">У вас пока нет чатов.</p>
+        {% endfor %}
+
+    </div>
+</body>
+</html>

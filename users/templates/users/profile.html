@@ -17,15 +17,14 @@
             <p><strong>Коины:</strong> <span class="coins">{{ coins }}</span></p>
         </div>
 
-        <a href="/" class="btn">На главную</a>
-        <br><br>
-        <a href="{% url 'homework:search' %}" class="btn">Поиск заказов</a>
-        <br><br>
-        <a href="{% url 'homework:orders' %}" class="btn">Мои заказы</a>
-        <br><br>
-        <a href="{% url 'homework:bids' %}" class="btn">Мои Ставки</a>
-        <br><br>
-        <a href="{% url 'users:logout' %}" class="btn logout-btn">Выйти</a>
+        <div class="buttons">
+            <a href="/" class="btn">На главную</a>
+            <a href="{% url 'homework:search' %}" class="btn">Поиск заказов</a>
+            <a href="{% url 'chat:list_chats' %}" class="btn">Переписки</a>
+            <a href="{% url 'homework:orders' %}" class="btn">Мои заказы</a>
+            <a href="{% url 'homework:bids' %}" class="btn">Мои ставки</a>
+            <a href="{% url 'users:logout' %}" class="btn logout-btn">Выйти</a>
+        </div>
     </div>
 
 </body>

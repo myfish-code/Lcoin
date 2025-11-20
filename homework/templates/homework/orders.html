@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <a href="{% url 'users:profile' %}" class="profile-link"> Профиль </a>
+        <a href="{% url 'users:profile' %}" class="back-link">&larr;Назад в профиль</a>
         <h1>Мой баланс: {{ coins }} coins</h1>
         <h1>Мои заказы</h1>
 
@@ -18,7 +18,7 @@
                 <ul>
                 {% for order in orders %}
                     <li>
-                        <span class="order-name">{{ order.name }}</span>
+                        <a href="{% url 'homework:order_detail' order.id %}" class="order-name">{{ order.name }}</a>
                         <span class="order-subject">{{ order.subject }}</span>
                         <span class="order-price">{{ order.price }} coins</span>
                         <form action="{% url 'homework:order_delete' order.id %}" method="POST" style="display:inline;">

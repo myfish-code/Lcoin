@@ -11,7 +11,6 @@ body {
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-
     display: flex;
     flex-direction: column;
     height: 80vh;
@@ -26,6 +25,7 @@ body {
 .message {
     margin-bottom: 15px;
     max-width: 80%;
+    word-wrap: break-word;
 }
 
 .my-message {
@@ -76,4 +76,82 @@ body {
 
 .message-form button:hover {
     background: #74b9ff;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+/* Офер-сообщения */
+.offer-message {
+    background: #ffeaa7;
+    color: #2d3436;
+    border: 2px dashed #fdcb6e;
+    position: relative;
+    padding-left: 12px;
+    border-left: 4px solid #0984e3;
+}
+
+/* Статусы оферов */
+.offer-accepted {
+    background: #dff9f1; /* светло-зеленый */
+    border: 2px solid #00b894;
+}
+
+.offer-declined {
+    background: #ffe6e6; /* светло-красный */
+    border: 2px solid #e74c3c;
+}
+
+/* Контейнер кнопок офера */
+.offer-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.offer-actions form {
+    display: inline-block;
+}
+
+.accept-btn {
+    padding: 6px 14px;
+    background: #27ae60; /* зелёная */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.accept-btn:hover {
+    background: #2ecc71;
+}
+
+.decline-btn {
+    padding: 6px 14px;
+    background: #c0392b; /* красная */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.decline-btn:hover {
+    background: #e74c3c;
+}
+
+/* Отдельные стили для текста статусов */
+.offer-status {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #2d3436;
 }

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from chat.models import Conversation, Message
+from homework.models import ResponseBid
 from users.models import Client
 # Create your views here.
 
@@ -60,3 +61,37 @@ def chat_view(request, chat_id):
         'chat': chat,
         'messages': messages
     })
+
+def handle_offer_view(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+
+    if message.sender == request.user:
+        return HttpResponseForbidden("Вы не можете принимать или отклонять свой же офер")
+    
+    if request.user not in (message.chat.user1, message.chat.user2):
+        return HttpResponseForbidden("У вас нет доступа к этому чату")
+        
+    
+    order = message.order
+    
+    if request.method == "POST":
+        answer = request.POST.get("action")
+        
+        bid = ResponseBid.objects.filter(order=order, author=request.user).first()
+
+        if answer == "accept":
+            order.executor = request.user
+            order.status = 'in_progress'
+            order.save()
+
+            message.message_type = 'offer_accepted'
+            message.save()
+
+            bid.status = 'acepted'
+            bid.save()
+
+        else:
+            message.message_type = 'offer_declined'
+            message.save()
+    
+    return redirect("chat:chat_detail", chat_id=message.chat.id)

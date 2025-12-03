@@ -165,3 +165,50 @@ h1 {
     color: #888;
     margin-top: 20px;
 }
+
+.assign-btn {
+    display: inline-block;
+    padding: 8px 18px;
+    background-color: #00b894;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.assign-btn:hover {
+    background-color: #019874;
+}
+
+.author-link {
+    font-weight: bold;         /* жирный текст */
+    color: #0984e3;            /* приятный синий цвет */
+    text-decoration: none;      /* убрать подчеркивание */
+    padding: 2px 4px;          /* немного отступов */
+    border-radius: 4px;        /* скругление */
+    transition: background 0.2s; /* плавный ховер */
+}
+
+.author-link:hover {
+    background-color: #74b9ff; /* подсветка при наведении */
+    color: white;              /* текст белый при ховере */
+}
+
+.accepted-bid {
+    background-color: #dff9f1; /* светло-зеленый */
+    border-left: 4px solid #00b894;
+}
+
+.declined-bid {
+    background-color: #ffe6e6; /* светло-красный */
+    border-left: 4px solid #e74c3c;
+    opacity: 0.7;
+}
+
+.disabled-bid {
+    background-color: #f0f0f0; /* серый */
+    border-left: 4px solid #ccc;
+    opacity: 0.6;
+    pointer-events: none; /* запретить клики */
+}

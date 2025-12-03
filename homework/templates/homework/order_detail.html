@@ -15,46 +15,66 @@
         <h1>{{ order.name }}</h1>
 
         <div class="order-card">
+            <p><strong>Автор:</strong>
+                {% if order.author != request.user %}
+                    <a href="{% url 'chat:create_chat' order.author.id %}" class="author-link">{{ order.author }}</a>
+                {% else %}
+                    {{ order.author }}
+                {% endif %}
+            </p>
+
             <p><strong>Предмет:</strong> {{ order.subject }}</p>
             <p><strong>Описание:</strong> {{ order.description }}</p>
             <p><strong>Цена:</strong> <span class="price">{{ order.price }} coins</span></p>
             <p><strong>Дата создания:</strong> {{ order.created_at }}</p>
-            <p><strong>Дней до конца:</strong> {{ order.deadline_time }}</p>
+            <p><strong>Дата дедлайна:</strong> {{ order.deadline_time }}</p>
         </div>
 
-        <!-- Дополнительно можно добавить кнопку для связи или редактирования -->
-        <div class="actions">
+        
+        
+        {% if order.author != request.user %}
+            <div class="actions">
+                <a href="{% url 'chat:create_chat' order.author.id %}" class="btn">Связаться с автором</a>
+            </div>
+            {% if order.status == "open" and not user_has_bid %}
+                <div class="actions">
+                    <a href="#" id="show-bid-form" class="btn btn-bid">Сделать ставку</a>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if order.status == "open" and not user_has_bid %}
+            <div id="bid-form-container" style="display:none; margin-top:20px;">
             
-            <a href="#" class="btn">Связаться с автором</a>
-
-        </div>
-
-        <div class="actions">
-            <a href="#" id="show-bid-form" class="btn btn-bid">Сделать ставку</a>
-        </div>
-
-
-        <div id="bid-form-container" style="display:none; margin-top:20px;">
-            <form method="POST" action="{% url 'homework:create_bid' order.id %}">
-                {% csrf_token %}
-                <label for="description">Описание отклика:</label><br>
-                <textarea name="description" id="description" rows="3" required></textarea><br>
+                <form method="POST" action="{% url 'homework:create_bid' order.id %}">
+                    {% csrf_token %}
+                    <label for="description">Описание отклика:</label><br>
+                    <textarea name="description" id="description" rows="3" required></textarea><br>
         
-                <label for="price">Цена (coins):</label><br>
-                <input type="number" name="price" id="price" min="1" required><br>
+                    <label for="price">Цена (coins):</label><br>
+                    <input type="number" name="price" id="price" min="1" required><br>
         
-                <label for="days">Срок выполнения (дней):</label><br>
-                <input type="number" name="days_to_complete" id="days" min="1" required><br><br>
+                    <label for="days">Срок выполнения (дней):</label><br>
+                    <input type="number" name="days_to_complete" id="days" min="1" required><br><br>
         
-                <button type="submit" class="btn btn-bid">Отправить ставку</button>
-            </form>
-        </div>
-        
+                    <button type="submit" class="btn btn-bid">Отправить ставку</button>
+                </form>
+            
+            </div>
+        {% endif %}
+
         <div class="bids-section">
             <h2>Отклики на заказ</h2>
             
             {% for bid in bids %}
-                <div class="bid-card">
+                
+
+                <div class="bid-card  
+                    {% if bid.status == 'acepted' %}accepted-bid
+                    {% elif bid.status == 'declined' %}declined-bid
+                    {% elif order.status != 'open' %}disabled-bid
+                    {% endif %}">
+
                     <p><strong>Исполнитель:</strong> 
                         {% if bid.author != request.user %}
                             <a href="{% url 'chat:create_chat' bid.author.id %}">{{ bid.author.username }}</a>
@@ -66,7 +86,14 @@
                     <p><strong>Цена:</strong> {{ bid.price }} coins</p>
                     <p><strong>Срок выполнения:</strong> {{ bid.days_to_complete }} дней</p>
                     <p><strong>Статус:</strong> {{ bid.get_status_display }}</p>
+                    {% if order.author == request.user and bid.status == "pending" and order.status == "open" %}
+                        <div class="actions">
+                            <a href="{% url 'homework:assign_executor' bid.id %}" class="btn assign-btn">Выбрать исполнителя</a>
+                        </div>
+                    {% endif %}
                 </div>
+            
+                
             {% empty %}
                 <p class="no-bids">Пока нет откликов на этот заказ.</p>
             {% endfor %}

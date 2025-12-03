@@ -2,6 +2,8 @@
 from django.db import models
 from django.conf import settings
 
+from homework.models import HomeworkOrder
+
 # Create your models here.
 
 class Conversation(models.Model):
@@ -34,4 +36,15 @@ class Message(models.Model):
                                related_name="sent_messages")
     text = models.TextField()
 
+    message_type = models.CharField(max_length=20,
+                                    choices=[('text', 'Обычное сообщение'),
+                                              ('offer', 'Офер'),
+                                              ('offer_accepted', 'Офер - принят'),
+                                              ('offer_declined', "Офер - отклонен")],
+                                      default='text')
+    order = models.ForeignKey(HomeworkOrder,
+                              on_delete=models.CASCADE,
+                              null=True,
+                              blank=True,
+                              related_name="messages")
     created_at = models.DateTimeField(auto_now_add=True)

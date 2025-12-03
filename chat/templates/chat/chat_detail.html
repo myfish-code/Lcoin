@@ -9,24 +9,51 @@
 <body>
 
 <div class="chat-container">
-
+    
+    <a href="{% url 'chat:list_chats' %}" class="back-link">&larr;Назад в чаты</a>
     <div class="messages">
         
         {% for message in messages %}
             {% if message.sender == request.user %}
-                <div class="message my-message">
+                <div class="message my-message 
+                    {% if message.message_type == 'offer' %}offer-message{% endif %}
+                    {% if message.message_type == 'offer_accepted' %}offer-accepted{% endif %}
+                    {% if message.message_type == 'offer_declined' %}offer-declined{% endif %}">
                     <div class="text">{{ message.text }}</div>
-                    <div class="time">{{ message.created_at|date:"d.m.Y h:i" }}</div>
+                    <div class="time">{{ message.created_at|date:"d.m.Y H:i" }}</div>
+                    {% if message.message_type == 'offer_accepted' %}
+                        <div class="offer-status">Офер принят исполнителем</div>
+                    {% elif message.message_type == 'offer_declined' %}
+                        <div class="offer-status">Офер отклонён исполнителем</div>
+                    {% endif %}
                 </div>
 
             {% else %}
-                <div class="message their-message">
+                <div class="message their-message 
+                    {% if message.message_type == 'offer' %}offer-message{% endif %}
+                    {% if message.message_type == 'offer_accepted' %}offer-accepted{% endif %}
+                    {% if message.message_type == 'offer_declined' %}offer-declined{% endif %}">
                     <div class="text">{{ message.text }}</div>
-                    <div class="time">{{ message.created_at|date:"d.m.Y h:i"  }}</div>
+                    <div class="time">{{ message.created_at|date:"d.m.Y H:i" }}</div>
+
+                    {% if message.message_type == 'offer' %}
+                        <div class="offer-actions">
+                            <form method="post" action="{% url 'chat:handle_offer' message.id %}">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="accept" class="btn accept-btn">Принять</button>
+                            </form>
+                            <form method="post" action="{% url 'chat:handle_offer' message.id %}">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="decline" class="btn decline-btn">Отклонить</button>
+                            </form>
+                        </div>
+                    {% elif message.message_type == 'offer_accepted' %}
+                        <div class="offer-status">Вы приняли офер</div>
+                    {% elif message.message_type == 'offer_declined' %}
+                        <div class="offer-status">Вы отклонили офер</div>
+                    {% endif %}
                 </div>
-
             {% endif %}
-
         {% endfor %}
            
     </div>

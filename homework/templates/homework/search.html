@@ -8,10 +8,22 @@
 </head>
 <body>
     <br>
+    
     <a href="{% url 'users:profile' %}" class="back-link">&larr;Назад в профиль</a>
     <h1>Поиск домашних заданий</h1>
-    <form method="get">
-        <input type="text" name="query" placeholder="Введите ключевое слово">
+
+    <form method="get" class="search-form">
+        <input type="text" name="query" placeholder="Введите ключевое слово" value="{{ request.GET.query }}">
+        
+        <select name="subject">
+            
+            <option value="" {% if not request.GET.subject %}selected{% endif %}>Все предметы</option>
+        
+            <!-- Остальные предметы -->
+            {% for sub in subjects %}
+                <option value="{{ sub }}" {% if request.GET.subject == sub %}selected{% endif %}>{{ sub }}</option>
+            {% endfor %}
+        </select>
         <button type="submit">Найти</button>
     </form>
 

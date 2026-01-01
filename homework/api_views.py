@@ -20,14 +20,14 @@ class SearchOrdersAPIView(APIView):
 
     def get(self, request):
         
-        query = request.GET.get('query', '')
-        subject = request.GET.get('subject', '')
+        #query = request.GET.get('query', '')
+        #subject = request.GET.get('subject', '')
 
         orders = HomeworkOrder.objects.filter(status="open")
-        if query:
-            orders = orders.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        if subject:
-            orders = orders.filter(subject=subject)
+        #if query:
+        #    orders = orders.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        #if subject:
+        #    orders = orders.filter(subject=subject)
 
         serializer_orders = HomeworkOrderSerializer(orders, many=True)
         return Response({
@@ -39,16 +39,22 @@ class SearchOrderDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, order_id):
+        
         order = get_object_or_404(HomeworkOrder, id=order_id)
+    
         bids = ResponseBid.objects.filter(order=order)
-        user_has_bid = bids.filter(author=request.user).exists() 
+        user_bid = bids.filter(author=request.user).first()
+        
+        is_author = (order.author == request.user)
 
         serializer_bids = ResponseBidSerializer(bids, many=True)
 
         return Response({
             "order": HomeworkOrderSerializer(order).data,
             "bids": serializer_bids.data,
-            "user_had_bid": user_has_bid
+            "is_author": is_author,
+            "user_bid_id": user_bid.id if user_bid else None,
+
         }, status=status.HTTP_200_OK)
 
 
@@ -136,24 +142,18 @@ class MyOrdersAPIView(APIView):
 
     def get(self, request):
         myOrders = HomeworkOrder.objects.filter(author=request.user)
+            
         serializer_myOrders = HomeworkOrderSerializer(myOrders, many=True)
         return Response({
             "myOrders": serializer_myOrders.data
         }, status=status.HTTP_200_OK)
     
-    def post(self, request):
-        user = request.user
-             
+    def post(self, request):     
         name = request.POST.get("name")
         description = request.POST.get("description")
         price = request.POST.get("price")
         deadline_time = request.POST.get("deadline_time")
         subject = request.POST.get("subject")
-
-        if int(price) > user.coins:
-            return Response({
-                "error": "Недостаточно монет для создания заказа"
-            }, status=status.HTTP_400_BAD_REQUEST)
         
         deadline_time = timezone.now() + timedelta(days=int(deadline_time))
         HomeworkOrder.objects.create(
@@ -164,21 +164,13 @@ class MyOrdersAPIView(APIView):
             subject=subject,
             author=request.user
         )
-
-        user.coins -= int(price)
-        user.save()
-
-
-
         orders = HomeworkOrder.objects.filter(author=request.user)
 
         serializer_orders = HomeworkOrderSerializer(orders, many=True)
 
         return Response({
-            "orders": serializer_orders.data,
-            "coins": user.coins
-
-        })
+            "myOrders": serializer_orders.data,
+        }, status=status.HTTP_200_OK)
 
 class DeleteMyOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -187,8 +179,6 @@ class DeleteMyOrderAPIView(APIView):
         user = request.user
 
         order = get_object_or_404(HomeworkOrder, id=order_id, author=user)
-
-        user.coins += int(order.price)
 
         order.delete()
         user.save()

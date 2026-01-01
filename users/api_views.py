@@ -11,6 +11,8 @@ class LoginAPIView(APIView):
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
+        if (not username or not password):
+            return Response({"error": "Нет всех данных"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(username=username, password=password)
         
@@ -21,7 +23,6 @@ class LoginAPIView(APIView):
 
 
         return Response({
-            "user": ClientSerializer(user).data,
             "access": str(refresh.access_token),
             "refresh": str(refresh)
             })
@@ -34,6 +35,9 @@ class RegisterAPIView(APIView):
 
         email = request.data.get("email")
 
+        if (not username or not password or not password2 or not email):
+            return Response({"error": "Нет всех данных"}, status=status.HTTP_400_BAD_REQUEST)
+        
         if password != password2:
             return Response({"error": "Пароли не совпадают"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -43,7 +47,7 @@ class RegisterAPIView(APIView):
         if Client.objects.filter(email=email).exists():
             return Response({"error": "Почта уже используется"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = Client.objects.create(
+        user = Client.objects.create_user(
             username=username,
             password=password,
             email=email
@@ -52,9 +56,8 @@ class RegisterAPIView(APIView):
         refresh = RefreshToken.for_user(user)
 
         return Response({
-            "user": ClientSerializer(user).data,
             "access": str(refresh.access_token),
-            "tokens": str(refresh)
+            "refresh": str(refresh)
             }, status=status.HTTP_201_CREATED)
 
 
@@ -62,8 +65,6 @@ class ProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({
-            "user": ClientSerializer(request.user).data
-        }, status=status.HTTP_200_OK)
+        return Response(ClientSerializer(request.user).data, status=status.HTTP_200_OK)
 
 

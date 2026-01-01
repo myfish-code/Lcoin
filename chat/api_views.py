@@ -18,7 +18,7 @@ class MyChatsAPIView(APIView):
 
     def get(self, request):
         chats = Conversation.objects.filter(Q(user1=request.user) | Q(user2=request.user))
-                                            
+            
         return Response({
             "chats": ConversationSerializer(chats, many=True).data
         }, status=status.HTTP_200_OK)

@@ -9,7 +9,10 @@ class HomeworkOrderSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_author(self, obj):
-        return obj.author.username
+        return {
+            "id": obj.author.id,
+            "username": obj.author.username
+        }
     
 class ResponseBidSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
@@ -19,4 +22,7 @@ class ResponseBidSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_author(self, obj):
-        return obj.author.username
+        return {
+            "id": obj.author.id,
+            "username": obj.author.username
+        }

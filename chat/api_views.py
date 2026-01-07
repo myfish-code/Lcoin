@@ -43,11 +43,10 @@ class CreateChatAPIView(APIView):
         if not chat:
             chat = Conversation.objects.create(user1=user1, user2=user2)
 
-        messages = chat.messages.all().order_by("created_at")
+        
 
         return Response({
-            "chat": ConversationSerializer(chat).data,
-            "messages": MessageSerializer(messages, many=True).data
+            "chatId": chat.id
         }, status=status.HTTP_200_OK)
 
 class ChatAPIView(APIView):
@@ -102,12 +101,52 @@ class ChatAPIView(APIView):
         
 
         messages = Message.objects.filter(chat=chat).order_by("created_at")
-
         return Response({
             "chat": ConversationSerializer(chat).data,
-            "messages": MessageSerializer(messages, many=True).data
+            "messages": MessageSerializer(messages, many=True).data,
+            "userId": request.user.id
         })
     
+    def delete(self, chat_id):
+        pass
+
+class MessageDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self, request, message_id):
+        message = get_object_or_404(Message, id=message_id, sender=request.user)
+        chat = message.chat
+        message.delete()
+
+        messages = Message.objects.filter(chat=chat).order_by("created_at")
+        
+        chat.last_message = messages.last()
+        chat.save()
+
+        return Response({
+            "messages": MessageSerializer(messages, many=True).data
+        }, status=status.HTTP_200_OK)
+
+
+
+    def patch(self, request, message_id):
+        message = get_object_or_404(Message, id=message_id, sender=request.user)
+
+        messageText = request.data.get("text")
+
+        if messageText:
+
+            message.text = messageText
+            message.save()
+
+        messages = Message.objects.filter(chat=message.chat).order_by("created_at")
+
+        return Response({
+            "messages": MessageSerializer(messages, many=True).data
+        }, status=status.HTTP_200_OK)
+
+
+
 class HandleOfferAPIView(APIView):
     permission_classes = [IsAuthenticated]
 

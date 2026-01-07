@@ -13,6 +13,7 @@ class HomeworkOrder(models.Model):
 
     STATUS_CHOICES = [
         ('open', "Открыт"),
+        ('pending', 'Ожидает'),
         ('in_progress', 'В работе'),
         ('Completed', "Выполнен"),
     ]
@@ -29,6 +30,7 @@ class HomeworkOrder(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
                                   related_name='orders')
+    
     executor = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  null=True,
                                  blank=True,
@@ -37,6 +39,12 @@ class HomeworkOrder(models.Model):
 
     status = models.CharField(max_length=20, default="open", choices=STATUS_CHOICES)
 
+    selected_bid = models.ForeignKey('ResponseBid',
+                                      null=True,
+                                      blank=True,
+                                      on_delete=models.SET_NULL,
+                                      related_name="selected_in_order")
+    
 class ResponseBid(models.Model):
 
     description = models.TextField()

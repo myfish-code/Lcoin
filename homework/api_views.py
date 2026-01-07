@@ -1,3 +1,4 @@
+
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import timedelta
@@ -23,7 +24,7 @@ class SearchOrdersAPIView(APIView):
         #query = request.GET.get('query', '')
         #subject = request.GET.get('subject', '')
 
-        orders = HomeworkOrder.objects.filter(status="open")
+        orders = HomeworkOrder.objects.filter(Q(status="open") | Q(status="pending")).order_by("-created_at")
         #if query:
         #    orders = orders.filter(Q(name__icontains=query) | Q(description__icontains=query))
         #if subject:
@@ -80,7 +81,7 @@ class CreateBidAPIView(APIView):
         price = int(request.data.get("price"))
         days_to_complete = int(request.data.get("days_to_complete"))
 
-        ResponseBid.objects.create(
+        user_bid = ResponseBid.objects.create(
             description=description,
             author=request.user,
             price=price,
@@ -92,11 +93,12 @@ class CreateBidAPIView(APIView):
         serializer_bids = ResponseBidSerializer(bids, many=True)
 
         return Response({
-            "bids": serializer_bids.data
+            "bids": serializer_bids.data,
+            "bidId": user_bid.id
         }, status=status.HTTP_201_CREATED)
 
 
-class AssignExecutorAPIView(APIView):
+class OrderAssignmentAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
 
@@ -120,6 +122,9 @@ class AssignExecutorAPIView(APIView):
         if not chat:
             chat = Conversation.objects.create(user1=user1, user2=user2)
         
+        order.status = "pending"
+        order.selected_bid = bid
+        order.save()
         message = Message.objects.create(
             chat=chat,
             sender=request.user,
@@ -133,8 +138,35 @@ class AssignExecutorAPIView(APIView):
         
         
         return Response({
-            "success": True 
+            "order": HomeworkOrderSerializer(order).data 
         }, status=status.HTTP_200_OK)
+    
+    def delete(self, request, order_id):
+        order = get_object_or_404(HomeworkOrder, id=order_id)
+
+        offer_message = Message.objects.filter(order=order).first()
+        chat = offer_message.chat if offer_message else None
+
+        if order.author != request.user:
+            return Response({
+                "error": "У вас  нет права отправлять офер"
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        order.status = "open"
+        order.selected_bid = None
+        order.save()
+
+        Message.objects.filter(order=order).delete()
+
+        if chat:
+            chat.last_message = chat.messages.order_by("-created_at").first()
+            chat.save()
+        return Response({
+            "order": HomeworkOrderSerializer(order).data
+        }, status=status.HTTP_200_OK)
+
+
+
 
 
 class MyOrdersAPIView(APIView):
@@ -149,6 +181,7 @@ class MyOrdersAPIView(APIView):
         }, status=status.HTTP_200_OK)
     
     def post(self, request):     
+        
         name = request.POST.get("name")
         description = request.POST.get("description")
         price = request.POST.get("price")
@@ -172,10 +205,7 @@ class MyOrdersAPIView(APIView):
             "myOrders": serializer_orders.data,
         }, status=status.HTTP_200_OK)
 
-class DeleteMyOrderAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, order_id):
+    def delete(self, request, order_id):
         user = request.user
 
         order = get_object_or_404(HomeworkOrder, id=order_id, author=user)
@@ -185,8 +215,7 @@ class DeleteMyOrderAPIView(APIView):
 
         return Response({
             "success": True
-        }, status=status.HTTP_204_NO_CONTENT)
-    
+        }, status=status.HTTP_200_OK)    
     
 class MyBidsAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -200,3 +229,17 @@ class MyBidsAPIView(APIView):
             "bids": serializer_bids.data
         },status=status.HTTP_200_OK)
 
+    def delete(self, request, bid_id):
+        bid = ResponseBid.objects.filter(id=bid_id, author=request.user).first()
+
+        if not bid:
+            return Response({
+                "error": "У вас нет прав выполнять это действие"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        order = bid.order
+        bid.delete()
+
+        return Response({
+            "bids": ResponseBidSerializer(order.bids.all(), many=True).data
+        }, status=status.HTTP_200_OK)

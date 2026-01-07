@@ -16,7 +16,7 @@ class Conversation(models.Model):
                               related_name="conversations_as_user2")
     
     last_message = models.ForeignKey('Message',
-                                    on_delete=models.CASCADE,
+                                    on_delete=models.SET_NULL,
                                     null=True,
                                     blank=True,
                                     related_name="+")
@@ -46,5 +46,5 @@ class Message(models.Model):
                               on_delete=models.CASCADE,
                               null=True,
                               blank=True,
-                              related_name="messages")
+                              related_name="order_messages")
     created_at = models.DateTimeField(auto_now_add=True)

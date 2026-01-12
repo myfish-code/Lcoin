@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from homework.models import HomeworkOrder, ResponseBid
+from homework.models import HomeworkOrder, OrderReview, ResponseBid
 
 class HomeworkOrderSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
@@ -16,6 +16,7 @@ class HomeworkOrderSerializer(serializers.ModelSerializer):
     
 class ResponseBidSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
+    order = serializers.SerializerMethodField()
 
     class Meta:
         model = ResponseBid
@@ -26,3 +27,14 @@ class ResponseBidSerializer(serializers.ModelSerializer):
             "id": obj.author.id,
             "username": obj.author.username
         }
+    
+    def get_order(self, obj):
+        return {
+            "id": obj.order.id,
+            "status": obj.order.status
+        }
+
+class OrderReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderReview
+        fields = "__all__"

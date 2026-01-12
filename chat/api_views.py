@@ -70,7 +70,7 @@ class ChatAPIView(APIView):
 
             return Response({
                 "chat": ConversationSerializer(chat).data,
-                "messages": MessageSerializer(messages, many=True).data
+                "messages": MessageSerializer(messages, many=True,context={'request': request}).data
             }, status=status.HTTP_200_OK)
         
         last_message = Message.objects.create(
@@ -88,7 +88,7 @@ class ChatAPIView(APIView):
 
         return Response({
             "chat": ConversationSerializer(chat).data,
-            "messages": MessageSerializer(messages, many=True).data
+            "messages": MessageSerializer(messages, many=True,context={'request': request}).data
         }, status=status.HTTP_200_OK)
     
     def get(self, request, chat_id):
@@ -103,7 +103,7 @@ class ChatAPIView(APIView):
         messages = Message.objects.filter(chat=chat).order_by("created_at")
         return Response({
             "chat": ConversationSerializer(chat).data,
-            "messages": MessageSerializer(messages, many=True).data,
+            "messages": MessageSerializer(messages, many=True,context={'request': request}).data,
             "userId": request.user.id
         })
     
@@ -124,7 +124,7 @@ class MessageDetailAPIView(APIView):
         chat.save()
 
         return Response({
-            "messages": MessageSerializer(messages, many=True).data
+            "messages": MessageSerializer(messages, many=True,context={'request': request}).data
         }, status=status.HTTP_200_OK)
 
 
@@ -142,7 +142,7 @@ class MessageDetailAPIView(APIView):
         messages = Message.objects.filter(chat=message.chat).order_by("created_at")
 
         return Response({
-            "messages": MessageSerializer(messages, many=True).data
+            "messages": MessageSerializer(messages, many=True,context={'request': request}).data
         }, status=status.HTTP_200_OK)
 
 
@@ -198,6 +198,7 @@ class HandleOfferAPIView(APIView):
             "chat": ConversationSerializer(message.chat).data,
             "messages": MessageSerializer(
                 message.chat.messages.all().order_by("created_at"),
-                many=True
-            ).data
+                many=True,context={'request': request}).data
         }, status=status.HTTP_200_OK)
+    
+    

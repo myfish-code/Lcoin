@@ -36,11 +36,12 @@ class Message(models.Model):
                                related_name="sent_messages")
     text = models.TextField()
 
-    message_type = models.CharField(max_length=20,
+    type = models.CharField(max_length=20,
                                     choices=[('text', 'Обычное сообщение'),
                                               ('offer', 'Офер'),
                                               ('offer_accepted', 'Офер - принят'),
-                                              ('offer_declined', "Офер - отклонен")],
+                                              ('offer_declined', "Офер - отклонен"),
+                                              ('order_completed', 'Заказ - завершен')],
                                       default='text')
     order = models.ForeignKey(HomeworkOrder,
                               on_delete=models.CASCADE,

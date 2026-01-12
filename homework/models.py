@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class HomeworkOrder(models.Model):
@@ -15,7 +16,9 @@ class HomeworkOrder(models.Model):
         ('open', "Открыт"),
         ('pending', 'Ожидает'),
         ('in_progress', 'В работе'),
-        ('Completed', "Выполнен"),
+        ('dispute', 'Спор'),
+        ('canceled', "Отменен"),
+        ('completed', "Выполнен"),
     ]
     
     name = models.CharField(max_length=255)
@@ -45,6 +48,12 @@ class HomeworkOrder(models.Model):
                                       on_delete=models.SET_NULL,
                                       related_name="selected_in_order")
     
+    final_price = models.PositiveIntegerField(null=True, blank=True)
+    final_days = models.PositiveIntegerField(null=True, blank=True)    
+
+    started_at = models.DateTimeField(null=True, blank=True)
+    expected_finish_at = models.DateTimeField(null=True, blank=True)
+
 class ResponseBid(models.Model):
 
     description = models.TextField()
@@ -60,8 +69,11 @@ class ResponseBid(models.Model):
     
     status_choice = (
         ("pending", "Ожидает"),
-        ("accepted", "Принят"),
-        ("declined", "Отклонен")        
+        ("offer", "Предложение"),
+        ("accepted", "Принята"),
+        ("rejected", "Отклонена"),  
+        ("canceled", "Отозвана"),
+        ("completed", "Завершена")
     )
 
     status = models.CharField(max_length=20,
@@ -70,4 +82,64 @@ class ResponseBid(models.Model):
     
     days_to_complete = models.PositiveIntegerField(default=1)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class OrderReview(models.Model):
+
+    TYPES = [
+        ("customer", "заказчик"),
+        ("executor", "исполнитель")
+    ]
+    order = models.ForeignKey(HomeworkOrder,
+                               on_delete=models.CASCADE)
+    
+    text = models.TextField()
+    
+    grade = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
+
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               on_delete=models.CASCADE)
+    
+    review_type = models.CharField(max_length=10, choices=TYPES)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class OrderDisput(models.Model):
+    STATUS_CHOICES = (
+        ("open", "Открыт"),
+        ("on_review", "На рассмотрении"),
+        ("resolved", "Решен"),
+        ("closed", "Закрыт"),
+    )
+
+    order = models.ForeignKey(
+        HomeworkOrder, 
+        on_delete=models.CASCADE, 
+        related_name="disputes",
+        verbose_name="Заказ"
+    )
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name="initiated_disputes",
+        verbose_name="Инициатор"
+    )
+
+    description = models.TextField(verbose_name="Описание проблемы")
+
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default="open",
+        verbose_name="Статус спора"
+    )
+
+    admin_decision = models.TextField(blank=True, null=True, verbose_name="Решение админа")
+    
     created_at = models.DateTimeField(auto_now_add=True)

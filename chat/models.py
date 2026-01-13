@@ -41,8 +41,10 @@ class Message(models.Model):
                                               ('offer', 'Офер'),
                                               ('offer_accepted', 'Офер - принят'),
                                               ('offer_declined', "Офер - отклонен"),
+                                              ('dispute', 'Заказ - В споре'),
                                               ('order_completed', 'Заказ - завершен')],
                                       default='text')
+    
     order = models.ForeignKey(HomeworkOrder,
                               on_delete=models.CASCADE,
                               null=True,

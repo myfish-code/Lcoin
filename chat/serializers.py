@@ -34,10 +34,12 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_order(self, obj):
         if obj.order:
+            dispute = getattr(obj.order, 'dispute', None)
             return {
                 "id": obj.order.id,
                 "finalPrice": obj.order.final_price,
-                "finalDays": obj.order.final_days
+                "finalDays": obj.order.final_days,
+                "disputeId": dispute.id if dispute else None
             }
 
         return None

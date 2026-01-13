@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 # Create your models here.
 
 class HomeworkOrder(models.Model):
@@ -109,7 +110,7 @@ class OrderReview(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-class OrderDisput(models.Model):
+class OrderDispute(models.Model):
     STATUS_CHOICES = (
         ("open", "Открыт"),
         ("on_review", "На рассмотрении"),
@@ -117,10 +118,10 @@ class OrderDisput(models.Model):
         ("closed", "Закрыт"),
     )
 
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         HomeworkOrder, 
         on_delete=models.CASCADE, 
-        related_name="disputes",
+        related_name="dispute",
         verbose_name="Заказ"
     )
 
@@ -131,8 +132,12 @@ class OrderDisput(models.Model):
         verbose_name="Инициатор"
     )
 
-    description = models.TextField(verbose_name="Описание проблемы")
-
+    opponent = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name="received_disputes",
+        verbose_name="Ответчик"
+    )
     status = models.CharField(
         max_length=20, 
         choices=STATUS_CHOICES, 
@@ -141,5 +146,18 @@ class OrderDisput(models.Model):
     )
 
     admin_decision = models.TextField(blank=True, null=True, verbose_name="Решение админа")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class DisputeMessage(models.Model):
+
+    dispute = models.ForeignKey(OrderDispute,
+                                related_name="messages",
+                                on_delete=models.CASCADE)
+    description = models.TextField()
+
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                related_name="my_dispute_messages",
+                                on_delete=models.CASCADE)
     
     created_at = models.DateTimeField(auto_now_add=True)

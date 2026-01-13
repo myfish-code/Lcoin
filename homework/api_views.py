@@ -1,3 +1,4 @@
+from webbrowser import get
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import timedelta
@@ -10,8 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from chat.models import Conversation, Message
-from homework.models import HomeworkOrder, ResponseBid, OrderReview, OrderDisput
-from homework.serializers import ResponseBidSerializer, HomeworkOrderSerializer, OrderReviewSerializer
+from homework.models import HomeworkOrder, ResponseBid, OrderReview, OrderDispute
+from homework.serializers import ResponseBidSerializer, HomeworkOrderSerializer, OrderReviewSerializer, DisputeMessageSerializer, OrderDisputeSerializer
 
 from chat.serializers import MessageSerializer
 # Create your views here.
@@ -111,15 +112,17 @@ class OrderAssignmentAPIView(APIView):
     
     def delete(self, request, order_id):
         order = get_object_or_404(HomeworkOrder, id=order_id)
-        bid = order.selected_bid
+        message_to_delete = get_object_or_404(Message, order=order)
 
-        offer_message = Message.objects.filter(order=order).first()
-        chat = offer_message.chat if offer_message else None
+        chat = message_to_delete.chat
+
+        bid = order.selected_bid
 
         if order.author != request.user:
             return Response({
                 "error": "У вас  нет права отправлять офер"
             }, status=status.HTTP_403_FORBIDDEN)
+        
         bid.status = "pending"
         bid.save()
 
@@ -129,11 +132,12 @@ class OrderAssignmentAPIView(APIView):
         order.final_days = None
         order.save()
 
-        Message.objects.filter(order=order).delete()
+        message_to_delete.delete()
 
         if chat:
             chat.last_message = chat.messages.order_by("-created_at").first()
             chat.save()
+
         return Response({
             "order": HomeworkOrderSerializer(order).data
         }, status=status.HTTP_200_OK)
@@ -141,8 +145,9 @@ class OrderAssignmentAPIView(APIView):
 class OrderConfirmationAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, order_id):
+    def post(self, request, order_id, message_id):
         order = get_object_or_404(HomeworkOrder, id=order_id)
+        message = get_object_or_404(Message, id=message_id, order=order)
 
         if order.status != "pending":
             return Response({
@@ -173,17 +178,16 @@ class OrderConfirmationAPIView(APIView):
             order.expected_finish_at = timezone.now() + timedelta(days=order.final_days)
         order.save()
 
-        message = Message.objects.filter(order=order, type="offer").last()
-        if message:
-            message.type = "offer_accepted"
-            message.save()
+        message.type = "offer_accepted"
+        message.save()
 
         return Response({
             "message": MessageSerializer(message,context={'request': request}).data if message else None
         }, status=status.HTTP_200_OK)
 
-    def delete(self, request, order_id):
+    def delete(self, request, order_id, message_id):
         order = get_object_or_404(HomeworkOrder, id=order_id)
+        message = get_object_or_404(Message, id=message_id, order=order)
 
         if (not order.selected_bid or order.selected_bid.author != request.user):
             return Response({
@@ -200,10 +204,8 @@ class OrderConfirmationAPIView(APIView):
         order.final_days = None
         order.save()
 
-        message = Message.objects.filter(order=order, type="offer").last()
-        if message:
-            message.type = "offer_declined"
-            message.save()
+        message.type = "offer_declined"
+        message.save()
 
         return Response({
             "message": MessageSerializer(message,context={'request': request}).data if message else None
@@ -212,9 +214,10 @@ class OrderConfirmationAPIView(APIView):
 class OrderCompletionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, order_id):
+    def post(self, request, order_id, message_id):
         order = get_object_or_404(HomeworkOrder, id=order_id)
-        
+        message = get_object_or_404(Message, id=message_id, order=order)
+
         if request.user != order.author:
             return Response({
                 "error": "У вас  нет права потверждать выполнения заказа"
@@ -231,21 +234,19 @@ class OrderCompletionAPIView(APIView):
 
         order.status = 'completed'
         order.save()
-
-        message = Message.objects.filter(order=order, type="offer_accepted").last()
-        if message:
-            message.type = "order_completed"
-            message.save()
+        
+        message.type = "order_completed"
+        message.save()
         
         return Response({
             "message": MessageSerializer(message,context={'request': request}).data if message else None
         }, status=status.HTTP_200_OK)
     
 class OrderReviewAPIView(APIView):
-    def post(self, request, order_id):
+    def post(self, request, order_id, message_id):
         
         order = get_object_or_404(HomeworkOrder, id=order_id)
-        message = Message.objects.filter(order=order, type='order_completed').last()
+        message = get_object_or_404(Message, id=message_id, order=order)
 
         text = request.data.get("text")
         grade = request.data.get("grade")
@@ -261,11 +262,6 @@ class OrderReviewAPIView(APIView):
             return Response({
                 "error": "Оценка должна быть числом"
                 }, status=400)
-        
-        if not message:
-            return Response({
-                "error": "Такого сообщения не существует"
-            }, status=status.HTTP_400_BAD_REQUEST)
 
         type_user = ""
 
@@ -305,35 +301,39 @@ class OrderReviewAPIView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-class OrderDisputAPIView(APIView):
+class OrderDisputeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, order_id):
+    def post(self, request, order_id, message_id):
         order = get_object_or_404(HomeworkOrder, id=order_id)
+        message = get_object_or_404(Message, id=message_id, order=order)
 
-        if order.status not in ("in_progress", "dispute"):
+        if order.status != "in_progress":
             return Response({
                 "error": "Спор можно открыть только для заказов в статусе 'В работе'"
             }, status=status.HTTP_403_FORBIDDEN)
-        
-        text = request.data.get("text")
 
         if request.user not in (order.author, order.executor):
             return Response({
                 "error": "У вас нет прав открывать спор по этому заказу"
             }, status=status.HTTP_403_FORBIDDEN)
         
-        OrderDisput.objects.create(
+        opponent = order.executor if order.author == request.user else order.author
+
+        dispute = OrderDispute.objects.create(
             order=order,
-            description=text,
-            author=request.user
+            author=request.user,
+            opponent=opponent
         )
+
+        message.type = "dispute"
+        message.save()
 
         order.status = "dispute"
         order.save()
 
         return Response({
-            "success": True
+            "id": dispute.id
         }, status=status.HTTP_200_OK)
 
 class MyOrdersAPIView(APIView):
@@ -349,11 +349,15 @@ class MyOrdersAPIView(APIView):
     
     def post(self, request):     
         
-        name = request.POST.get("name")
-        description = request.POST.get("description")
-        price = request.POST.get("price")
-        deadline_time = request.POST.get("deadline_time")
-        subject = request.POST.get("subject")
+        name = request.data.get("name")
+        description = request.data.get("description")
+        price = request.data.get("price")
+        deadline_time = request.data.get("deadline_time")
+        subject = request.data.get("subject")
+
+        current_status = request.data.get("currentStatus")
+        if not current_status:
+            current_status = "open"
         
         deadline_time = timezone.now() + timedelta(days=int(deadline_time))
         HomeworkOrder.objects.create(
@@ -364,7 +368,7 @@ class MyOrdersAPIView(APIView):
             subject=subject,
             author=request.user
         )
-        orders = HomeworkOrder.objects.filter(author=request.user)
+        orders = HomeworkOrder.objects.filter(author=request.user, status=current_status)
 
         serializer_orders = HomeworkOrderSerializer(orders, many=True)
 
@@ -463,3 +467,27 @@ class MyBidsAPIView(APIView):
             "bids": ResponseBidSerializer(order.bids.all(), many=True).data
         }, status=status.HTTP_200_OK)
     
+
+class MyDisputesAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, bid_status=None):
+        user = request.user
+
+        user_participant = Q(author=user) | Q(opponent=user)
+        
+        if bid_status:
+            disputes = OrderDispute.objects.filter(user_participant & Q(status=bid_status))
+        
+        else:
+            disputes = OrderDispute.objects.filer(user_participant & Q(status="open"))
+
+        return Response({
+            "disputes": OrderDisputeSerializer(disputes, many=True).data
+        }, status=status.HTTP_200_OK)
+    def post(self, request):
+        pass
+        
+    def delete(self, request):
+        pass
+

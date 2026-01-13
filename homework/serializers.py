@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from homework.models import HomeworkOrder, OrderReview, ResponseBid
+from homework.models import HomeworkOrder, OrderReview, ResponseBid, OrderDispute, DisputeMessage
 
 class HomeworkOrderSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
@@ -37,4 +37,22 @@ class ResponseBidSerializer(serializers.ModelSerializer):
 class OrderReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderReview
+        fields = "__all__"
+
+class OrderDisputeSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrderDispute
+        fields = "__all__"
+    
+    def get_name(self, obj):
+        return { 
+            "author": obj.author.username,
+            "opponent": obj.opponent.username
+        }
+    
+class DisputeMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DisputeMessage
         fields = "__all__"

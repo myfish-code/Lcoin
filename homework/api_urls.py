@@ -6,9 +6,10 @@ from homework.api_views import (
     OrderConfirmationAPIView,
     OrderCompletionAPIView,
     OrderReviewAPIView,
-    OrderDisputAPIView,
+    OrderDisputeAPIView,
     MyOrdersAPIView,
-    MyBidsAPIView
+    MyBidsAPIView,
+    MyDisputesAPIView,
 )
 
 urlpatterns = [
@@ -19,15 +20,15 @@ urlpatterns = [
     path("search/bids/assign/<int:bid_id>/", OrderAssignmentAPIView.as_view()),
     path("search/orders/unassign/<int:order_id>/", OrderAssignmentAPIView.as_view()),
 
-    path("search/orders/confirm/<int:order_id>/", OrderConfirmationAPIView.as_view()),
-    path("search/orders/decline/<int:order_id>/", OrderConfirmationAPIView.as_view()),
+    path("search/orders/confirm/<int:order_id>/<int:message_id>/", OrderConfirmationAPIView.as_view()),
+    path("search/orders/decline/<int:order_id>/<int:message_id>/", OrderConfirmationAPIView.as_view()),
 
-    path("search/orders/complete/<int:order_id>/", OrderCompletionAPIView.as_view()),
+    path("search/orders/complete/<int:order_id>/<int:message_id>/", OrderCompletionAPIView.as_view()),
 
-    path("search/orders/review/<int:order_id>/", OrderReviewAPIView.as_view()),
+    path("search/orders/review/<int:order_id>/<int:message_id>/", OrderReviewAPIView.as_view()),
 
-    path("search/orders/disput/<int:order_id>/", OrderDisputAPIView.as_view()),
-    
+    path("search/orders/dispute/<int:order_id>/<int:message_id>/", OrderDisputeAPIView.as_view()),
+
     path("orders/<int:order_id>/delete/", MyOrdersAPIView.as_view()),
     path("orders/", MyOrdersAPIView.as_view()),
     path("orders/<str:order_status>/", MyOrdersAPIView.as_view()),
@@ -35,5 +36,8 @@ urlpatterns = [
     path("bids/<int:bid_id>/delete/", MyBidsAPIView.as_view()),
     path("bids/", MyBidsAPIView.as_view()),
     path("bids/<str:bid_status>/", MyBidsAPIView.as_view()),
-    
+
+    path("disputes/<int:dispute_id>/delete", MyDisputesAPIView.as_view()),
+    path("disputes/", MyDisputesAPIView.as_view()),
+    path("disputes/<str:bid_status>/", MyDisputesAPIView.as_view()),
 ]

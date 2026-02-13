@@ -42,7 +42,8 @@ class Message(models.Model):
                                               ('offer_accepted', 'Офер - принят'),
                                               ('offer_declined', "Офер - отклонен"),
                                               ('dispute', 'Заказ - В споре'),
-                                              ('order_completed', 'Заказ - завершен')],
+                                              ('order_completed', 'Заказ - завершен'),
+                                              ('deleted', 'Удаленное')],
                                       default='text')
     
     order = models.ForeignKey(HomeworkOrder,

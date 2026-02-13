@@ -10,6 +10,7 @@ from homework.api_views import (
     MyOrdersAPIView,
     MyBidsAPIView,
     MyDisputesAPIView,
+    DisputeDetailAPIView,
 )
 
 urlpatterns = [
@@ -37,7 +38,9 @@ urlpatterns = [
     path("bids/", MyBidsAPIView.as_view()),
     path("bids/<str:bid_status>/", MyBidsAPIView.as_view()),
 
-    path("disputes/<int:dispute_id>/delete", MyDisputesAPIView.as_view()),
     path("disputes/", MyDisputesAPIView.as_view()),
-    path("disputes/<str:bid_status>/", MyDisputesAPIView.as_view()),
+    path("disputes/<str:dispute_status>/", MyDisputesAPIView.as_view()),
+
+    path("dispute/<int:dispute_id>/", DisputeDetailAPIView.as_view()),
+    path("dispute/<int:dispute_id>/<int:last_message_id>/<int:limit>/", DisputeDetailAPIView.as_view()),
 ]

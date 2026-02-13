@@ -1,13 +1,41 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+LANGUAGE_CHOICES = [
+    ("en", "English"),
+    ("ru", "Русский"),
+    ("uk", "Українська"),
+    ("sk", "Slovenčina"),
+]
+
+STATUS_CHOICES = [
+    ("unverified", "Не верифицирован"),
+    ("pending", "Ожидает ответа"),
+    ("verified", "Верифицирован"),
+    ("rejected", "Отказано"),
+]
+
+
 class Client(AbstractUser):
     coins = models.IntegerField(default=100)
+
+    language = models.CharField(max_length=5, choices=LANGUAGE_CHOICES, default="sk")
 
     customer_stars_sum = models.PositiveIntegerField(default=0)
     customer_stars_count = models.PositiveIntegerField(default=0)
     customer_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    
+
     executor_stars_sum = models.PositiveIntegerField(default=0)
     executor_stars_count = models.PositiveIntegerField(default=0)
     executor_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+
+    verification_status = (
+        models.CharField(max_length=10, choices=STATUS_CHOICES, default="unverified")
+    )
+    verification_photo = models.ImageField(
+        upload_to="verification_docs/%Y/%m/%d/",
+        blank=True,
+        null=True,
+        verbose_name="Фото для верификации",
+    )
+    verification_rejected_reason = models.CharField(null=True, blank=True)

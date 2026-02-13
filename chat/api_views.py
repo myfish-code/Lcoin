@@ -1,3 +1,4 @@
+
 from chat.serializers import ConversationSerializer, MessageSerializer
 
 from rest_framework import status
@@ -11,13 +12,17 @@ from django.db.models import Q
 from chat.models import Conversation, Message
 from homework.models import ResponseBid
 from users.models import Client
+
+from django.db import transaction
 # Create your views here.
 
 class MyChatsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        chats = Conversation.objects.filter(Q(user1=request.user) | Q(user2=request.user))
+        chats = Conversation.objects.filter(
+            Q(user1=request.user) | Q(user2=request.user)
+        ).select_related('user1', 'user2', 'last_message')
             
         return Response({
             "chats": ConversationSerializer(chats, many=True).data
@@ -37,25 +42,34 @@ class CreateChatAPIView(APIView):
         
         if user1.id > user2.id:
             user1,user2 = user2, user1
-
-        chat = Conversation.objects.filter(user1=user1, user2=user2).first()
-
-        if not chat:
-            chat = Conversation.objects.create(user1=user1, user2=user2)
-
-        
-
-        return Response({
-            "chatId": chat.id
-        }, status=status.HTTP_200_OK)
+        try:
+            with transaction.atomic():
+                #chat = Conversation.objects.filter(user1=user1, user2=user2).first()
+                #if not chat:
+                #    chat = Conversation.objects.create(user1=user1, user2=user2)   
+                chat, _ = Conversation.objects.get_or_create(user1=user1, user2=user2)
+                return Response({
+                    "chatId": chat.id
+                }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Ошибка создания чата: {e}")
+            return Response({
+                "error": "Ошибка создания чата"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 class ChatAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, chat_id):
-        
-
-        chat = get_object_or_404(Conversation, id=chat_id)
+        chat = get_object_or_404(
+            Conversation.objects.select_related(
+                'user1',
+                'user2',
+                'last_message'
+                ),
+            id=chat_id
+        )
 
         if request.user not in [chat.user1, chat.user2]:
             return Response({
@@ -66,32 +80,30 @@ class ChatAPIView(APIView):
         text = request.data.get("text")
 
         if not text:
-            messages = Message.objects.filter(chat=chat).order_by("created_at")
-
             return Response({
-                "chat": ConversationSerializer(chat).data,
-                "messages": MessageSerializer(messages, many=True,context={'request': request}).data
-            }, status=status.HTTP_200_OK)
+                "error": "No message send"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
-        last_message = Message.objects.create(
-            chat=chat,
-            sender=request.user,
-            text=text
-        )
-        chat.last_message = last_message
-        chat.save()
-
-                
-
-        messages = Message.objects.filter(chat=chat).order_by("created_at") #или просто chat.message.all() потому что related_name="message"
-        #или просто messages = chat.messages.all().order_by("created_at")
-
-        return Response({
-            "chat": ConversationSerializer(chat).data,
-            "messages": MessageSerializer(messages, many=True,context={'request': request}).data
-        }, status=status.HTTP_200_OK)
-    
-    def get(self, request, chat_id):
+        try: 
+            with transaction.atomic():
+                last_message = Message.objects.create(
+                    chat=chat,
+                    sender=request.user,
+                    text=text
+                )
+                chat.last_message = last_message
+                chat.save()
+                return Response({
+                    "message": MessageSerializer(last_message,context={'request': request}).data
+                }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Ошибка создания чата: {e}")
+            return Response({
+                "error": "Ошибка отправки сообщения"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self, request, chat_id, last_message_id, limit):
         chat = get_object_or_404(Conversation, id=chat_id)
 
         if request.user not in [chat.user1, chat.user2]:
@@ -99,16 +111,30 @@ class ChatAPIView(APIView):
                 "error": "У вас нет права на эту переписку"
             }, status=status.HTTP_403_FORBIDDEN)
         
+        if last_message_id:
+            filters = Q(chat=chat) & Q(id__lt=last_message_id)
+        else:
+            filters = Q(chat=chat)
 
-        messages = Message.objects.filter(chat=chat).order_by("created_at")
+        count_messages = Message.objects.filter(filters).count()
+
+        limit = min(limit, count_messages)
+
+        messages_query = Message.objects.filter(filters).select_related(
+            'order',
+            'sender',
+            'order__dispute'
+        ).prefetch_related(
+            'order__reviews'
+        ).order_by("-created_at")[:limit]
+        
+        messages = list(messages_query)[::-1]
+
         return Response({
-            "chat": ConversationSerializer(chat).data,
             "messages": MessageSerializer(messages, many=True,context={'request': request}).data,
+            "messageRemain": count_messages - len(messages),
             "userId": request.user.id
         })
-    
-    def delete(self, chat_id):
-        pass
 
 class MessageDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -116,89 +142,38 @@ class MessageDetailAPIView(APIView):
     def delete(self, request, message_id):
         message = get_object_or_404(Message, id=message_id, sender=request.user)
         chat = message.chat
-        message.delete()
 
-        messages = Message.objects.filter(chat=chat).order_by("created_at")
-        
-        chat.last_message = messages.last()
-        chat.save()
+        try:
+            with transaction.atomic():
+                message.type = "deleted"
+                message.save(update_fields=['type'])
+
+                new_last_message = Message.objects.filter(chat=chat).exclude(type="deleted").order_by("created_at").last()
+
+                chat.last_message = new_last_message
+                chat.save()
+
+        except Exception as e:
+            print(f"Ошибка создания чата: {e}")
+            return Response({
+                "error": "Ошибка удаления сообщения"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
-            "messages": MessageSerializer(messages, many=True,context={'request': request}).data
+            "message_delete": MessageSerializer(message,context={'request': request}).data
         }, status=status.HTTP_200_OK)
 
 
 
     def patch(self, request, message_id):
         message = get_object_or_404(Message, id=message_id, sender=request.user)
-
+        
         messageText = request.data.get("text")
-
+    
         if messageText:
-
             message.text = messageText
-            message.save()
-
-        messages = Message.objects.filter(chat=message.chat).order_by("created_at")
+            message.save(update_fields=['text'])
 
         return Response({
-            "messages": MessageSerializer(messages, many=True,context={'request': request}).data
+            "message_patch": MessageSerializer(message, context={'request': request}).data
         }, status=status.HTTP_200_OK)
-
-
-
-class HandleOfferAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, message_id):
-        message = get_object_or_404(Message, id=message_id)
-
-        if message.sender == request.user:
-            return Response({
-                "error": "Вы не можете принимать или отклонять свой же офер"
-            }, status=status.HTTP_403_FORBIDDEN)
-        
-        if request.user not in (message.chat.user1, message.chat.user2):
-            return Response({
-                "error": "У вас нет доступа к этому чату"
-            }, status=status.HTTP_403_FORBIDDEN)
-            
-        if message.message_type != 'offer':
-            return Response({
-                "error": "Это не офер"
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        order = message.order
-        
-        
-        answer = request.data.get("action")
-            
-        bid = ResponseBid.objects.filter(order=order, author=request.user).first()
-        if not bid:
-            return Response({
-                "error": "Ставка не найдена"
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        if answer == "accept":
-            order.executor = request.user
-            order.status = 'in_progress'
-            order.save()
-
-            message.message_type = 'offer_accepted'
-            message.save()
-
-            bid.status = 'accepted'
-            bid.save()
-
-        else:
-            message.message_type = 'offer_declined'
-            message.save()
-        
-        return Response({
-            "chat": ConversationSerializer(message.chat).data,
-            "messages": MessageSerializer(
-                message.chat.messages.all().order_by("created_at"),
-                many=True,context={'request': request}).data
-        }, status=status.HTTP_200_OK)
-    
-    

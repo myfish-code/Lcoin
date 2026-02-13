@@ -2,9 +2,16 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from django.db.models import Count
 # Create your models here.
 
+class OrderManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().annotate(bids_count=Count("bids"))
+    
 class HomeworkOrder(models.Model):
+    
+    objects = OrderManager()
     
     SUBJECT_CHOICES = [
         ('MATH', 'Математика'),
@@ -92,7 +99,8 @@ class OrderReview(models.Model):
         ("executor", "исполнитель")
     ]
     order = models.ForeignKey(HomeworkOrder,
-                               on_delete=models.CASCADE)
+                               on_delete=models.CASCADE,
+                               related_name="reviews")
     
     text = models.TextField()
     
@@ -145,12 +153,23 @@ class OrderDispute(models.Model):
         verbose_name="Статус спора"
     )
 
+    last_message = models.ForeignKey('DisputeMessage',
+                                     on_delete=models.SET_NULL,
+                                     null=True,
+                                     blank=True)
     admin_decision = models.TextField(blank=True, null=True, verbose_name="Решение админа")
     
     created_at = models.DateTimeField(auto_now_add=True)
 
 class DisputeMessage(models.Model):
 
+    class Meta:
+        ordering = ['created_at']
+        
+    CHOICES = [
+        ("user", "Пользователь"),
+        ("admin", "Админ")
+    ]
     dispute = models.ForeignKey(OrderDispute,
                                 related_name="messages",
                                 on_delete=models.CASCADE)
@@ -159,5 +178,9 @@ class DisputeMessage(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 related_name="my_dispute_messages",
                                 on_delete=models.CASCADE)
+    
+    type = models.CharField(max_length=20, 
+                            choices=CHOICES,
+                            default="user")
     
     created_at = models.DateTimeField(auto_now_add=True)

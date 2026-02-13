@@ -4,13 +4,13 @@ from chat.api_views import (
     CreateChatAPIView,
     ChatAPIView,
     MessageDetailAPIView,
-    HandleOfferAPIView
+
 )
 
 urlpatterns = [
     path('chats/', MyChatsAPIView.as_view()),
     path('chats/create/<int:user_id>/', CreateChatAPIView.as_view()),
     path('chats/<int:chat_id>/', ChatAPIView.as_view()),
+    path('chats/<int:chat_id>/<int:last_message_id>/<int:limit>/', ChatAPIView.as_view()),
     path('messages/<int:message_id>/', MessageDetailAPIView.as_view()),
-    path('chats/offer/<int:message_id>/', HandleOfferAPIView.as_view())
 ]

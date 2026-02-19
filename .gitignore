@@ -5,7 +5,7 @@ __pycache__/
 *.pyd
 *.pyc
 
-verification_docs/
+.verification_docs/
 verification_docs/**/*
 # Виртуальное окружение
 venv/

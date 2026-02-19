@@ -825,7 +825,7 @@ class MyDisputesAPIView(APIView):
 class DisputeDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, dispute_id, last_message_id, limit):
+    def get(self, request, dispute_id):
         user = request.user
 
         dispute = get_object_or_404(OrderDispute.objects.select_related(
@@ -841,27 +841,68 @@ class DisputeDetailAPIView(APIView):
         
         order = dispute.order
 
+        first_message_id = request.query_params.get("first_message_id", None)
+        if first_message_id:
+            first_message_id = int(first_message_id)
+
+        last_message_id = request.query_params.get("last_message_id", None)
         if last_message_id:
-            filters = Q(dispute=dispute) & Q(id__lt=last_message_id)
-        else: 
+            last_message_id = int(last_message_id)
+
+        limit = int(request.query_params.get("limit", 50))
+        mode = request.query_params.get("mode", None)
+
+        if mode == "getMyDisputeDetail" or mode == "getMoreDisputeMessages":
+            filters = Q(dispute=dispute)
+            if mode == "getMoreDisputeMessages":
+                filters &= Q(id__lt=last_message_id)
+
+            count_messages = DisputeMessage.objects.filter(filters).count()
+        
+            limit = min(limit, count_messages)
+            messages_query = DisputeMessage.objects.filter(filters).select_related(
+                "author"
+            ).order_by("-created_at")[:limit]
+
+            messages = list(messages_query)[::-1]
+
+            if mode == "getMyDisputeDetail":
+                return Response({
+                    "order": HomeworkOrderSerializer(order).data,
+                    "dispute": OrderDisputeSerializer(dispute).data,
+                    "messages": DisputeMessageSerializer(messages, many=True).data,
+                    "messageRemain": count_messages - len(messages),
+                    "user_id": request.user.id
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "messages": DisputeMessageSerializer(messages, many=True).data,
+                    "messageRemain": count_messages - len(messages),
+                    "user_id": request.user.id
+                }, status=status.HTTP_200_OK)
+        
+        elif mode == "getUpdatedDisputeMessages":
             filters = Q(dispute=dispute)
 
-        count_messages = DisputeMessage.objects.filter(filters).count()
+            count_messages = DisputeMessage.objects.filter(filters).count()
         
-        limit = min(limit, count_messages)
-        messages_query = DisputeMessage.objects.filter(filters).select_related(
-            "author"
-        ).order_by("-created_at")[:limit]
+            limit = min(limit, count_messages)
 
-        messages = list(messages_query)[::-1]
+            messages_query = DisputeMessage.objects.filter(filters).select_related(
+                "author"
+            ).order_by("-created_at")[:limit]
 
-        return Response({
-            "order": HomeworkOrderSerializer(order).data,
-            "dispute": OrderDisputeSerializer(dispute).data,
-            "messages": DisputeMessageSerializer(messages, many=True).data,
-            "messageRemain": count_messages - len(messages),
-            "user_id": request.user.id
-        }, status=status.HTTP_200_OK)
+            messages = list(messages_query)[::-1]
+            
+            return Response({
+                "messages": DisputeMessageSerializer(messages, many=True).data,
+            }, status=status.HTTP_200_OK)
+        
+        else:
+            return Response({
+                "error": "incorrect mode"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
 
     def post(self, request, dispute_id):
         user = request.user

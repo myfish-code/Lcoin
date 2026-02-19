@@ -42,5 +42,5 @@ urlpatterns = [
     path("disputes/<str:dispute_status>/", MyDisputesAPIView.as_view()),
 
     path("dispute/<int:dispute_id>/", DisputeDetailAPIView.as_view()),
-    path("dispute/<int:dispute_id>/<int:last_message_id>/<int:limit>/", DisputeDetailAPIView.as_view()),
+
 ]

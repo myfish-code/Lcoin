@@ -103,38 +103,73 @@ class ChatAPIView(APIView):
                 "error": "Ошибка отправки сообщения"
             }, status=status.HTTP_400_BAD_REQUEST)
         
-    def get(self, request, chat_id, last_message_id, limit):
+    def get(self, request, chat_id):
         chat = get_object_or_404(Conversation, id=chat_id)
 
         if request.user not in [chat.user1, chat.user2]:
             return Response({
                 "error": "У вас нет права на эту переписку"
             }, status=status.HTTP_403_FORBIDDEN)
-        
+
+        first_message_id = request.query_params.get("first_message_id", None)
+        if first_message_id:
+            first_message_id = int(first_message_id)
+
+        last_message_id = request.query_params.get("last_message_id", None)
         if last_message_id:
-            filters = Q(chat=chat) & Q(id__lt=last_message_id)
-        else:
+            last_message_id = int(last_message_id)
+
+        limit = int(request.query_params.get("limit", 50))
+        mode = request.query_params.get("mode", None)
+
+        if mode == "getMyChatDetail" or mode == "getMoreMessage": 
             filters = Q(chat=chat)
+            if mode == "getMoreMessage":
+                filters &= Q(id__lt=first_message_id)
+            count_messages = Message.objects.filter(filters).count()
 
-        count_messages = Message.objects.filter(filters).count()
+            limit = min(limit, count_messages)
 
-        limit = min(limit, count_messages)
-
-        messages_query = Message.objects.filter(filters).select_related(
-            'order',
-            'sender',
-            'order__dispute'
-        ).prefetch_related(
-            'order__reviews'
-        ).order_by("-created_at")[:limit]
+            messages_query = Message.objects.filter(filters).select_related(
+                'order',
+                'sender',
+                'order__dispute'
+            ).prefetch_related(
+                'order__reviews'
+            ).order_by("-created_at")[:limit]
         
-        messages = list(messages_query)[::-1]
+            messages = list(messages_query)[::-1]
 
-        return Response({
-            "messages": MessageSerializer(messages, many=True,context={'request': request}).data,
-            "messageRemain": count_messages - len(messages),
-            "userId": request.user.id
-        })
+            return Response({
+                "messages": MessageSerializer(messages, many=True,context={'request': request}).data,
+                "messageRemain": count_messages - len(messages),
+                "userId": request.user.id
+            })
+
+        elif mode == "getUpdatedMessages":
+            filters = Q(chat=chat)
+            count_messages = Message.objects.filter(filters).count()
+
+            limit = min(limit, count_messages)
+
+            messages_query = Message.objects.filter(filters).select_related(
+                'order',
+                'sender',
+                'order__dispute'
+            ).prefetch_related(
+                'order__reviews'
+            ).order_by("-created_at")[:limit]
+        
+            messages = list(messages_query)[::-1]
+
+            return Response({
+                "messages": MessageSerializer(messages, many=True,context={'request': request}).data,
+            })
+
+        else:
+            return Response({
+                "error": "incorrect mode"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 class MessageDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]

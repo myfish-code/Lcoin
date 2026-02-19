@@ -5,6 +5,8 @@ __pycache__/
 *.pyd
 *.pyc
 
+verification_docs/
+verification_docs/**/*
 # Виртуальное окружение
 venv/
 env/
@@ -40,4 +42,3 @@ venv/
 __pycache__/
 *.sqlite3
 .DS_Store
-verification_docs/

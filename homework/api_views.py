@@ -174,16 +174,16 @@ class OrderAssignmentAPIView(APIView):
 
                 order.status = "pending"
                 order.selected_bid = bid
-                order.final_price = final_price
-                order.final_days = final_days
-                order.save(update_fields=['status', 'selected_bid', 'final_price', 'final_days'])
+                order.save(update_fields=['status', 'selected_bid'])
 
                 message = Message.objects.create(
                     chat=chat,
                     sender=request.user,
                     text="OFFER",
                     type='offer',
-                    order=order
+                    order=order,
+                    final_price = final_price,
+                    final_days = final_days
                 )
 
                 chat.last_message = message
@@ -223,9 +223,8 @@ class OrderAssignmentAPIView(APIView):
 
                 order.status = "open"
                 order.selected_bid = None
-                order.final_price = None
-                order.final_days = None
-                order.save(update_fields=['status', 'selected_bid', 'final_price', 'final_days'])
+            
+                order.save(update_fields=['status', 'selected_bid'])
 
                 message_id = message_to_delete.id
 
@@ -253,13 +252,6 @@ class OrderConfirmationAPIView(APIView):
         order = get_object_or_404(HomeworkOrder.objects.select_related(
             'selected_bid', 'author', 'selected_bid__author', 'executor'
         ), id=order_id)
-        message = get_object_or_404(Message.objects.select_related(
-            'order',
-            'sender',
-            'order__dispute'
-        ).prefetch_related(
-            'order__reviews'
-        ), id=message_id, order=order)
 
         if order.status != "pending":
             return Response({
@@ -268,6 +260,22 @@ class OrderConfirmationAPIView(APIView):
         
         if not order.selected_bid:
             return Response({"error": "Ставка не выбрана"}, status=400)
+        
+        message = get_object_or_404(Message.objects.select_related(
+            'order',
+            'sender',
+            'order__dispute'
+        ).prefetch_related(
+            'order__reviews'
+        ), id=message_id, order=order)
+        
+        final_price = message.final_price
+        final_days = message.final_days
+
+        if not final_days or not final_price:
+            return Response({
+                "error": "Нет данных цены или дней на выполнение"
+            }, status=400)
         
         bid = order.selected_bid
         bid_author = bid.author
@@ -286,12 +294,16 @@ class OrderConfirmationAPIView(APIView):
 
                 order.executor = bid_author
                 order.status = "in_progress"
+                order.final_price = final_price
+                order.final_days = final_days
 
                 now = timezone.now()
                 order.started_at = now
-                if order.final_days:
-                    order.expected_finish_at = now + timedelta(days=order.final_days)
-                order.save(update_fields=['status', 'executor', 'started_at', 'expected_finish_at'])
+
+                
+                order.expected_finish_at = now + timedelta(days=final_days)
+
+                order.save(update_fields=['status', 'executor', 'started_at', 'expected_finish_at', 'final_price', 'final_days'])
 
                 message.type = "offer_accepted"
                 message.save(update_fields=['type'])
@@ -331,9 +343,8 @@ class OrderConfirmationAPIView(APIView):
 
                 order.status = "open"
                 order.selected_bid = None
-                order.final_price = None
-                order.final_days = None
-                order.save(update_fields=['status', 'selected_bid', 'final_price', 'final_days'])
+
+                order.save(update_fields=['status', 'selected_bid'])
 
                 message.type = "offer_declined"
                 message.save(update_fields=['type'])

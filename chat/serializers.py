@@ -54,10 +54,9 @@ class MessageSerializer(serializers.ModelSerializer):
         if obj.order:
             dispute = getattr(obj.order, 'dispute', None)
             order = obj.order
+            
             return {
                 "id": order.id,
-                "finalPrice": order.final_price,
-                "finalDays": order.final_days,
                 "disputeId": dispute.id if dispute else None,
                 "expectedFinish": order.expected_finish_at
             }

@@ -51,4 +51,8 @@ class Message(models.Model):
                               null=True,
                               blank=True,
                               related_name="order_messages")
+    
+    final_price = models.PositiveIntegerField(null=True, blank=True)
+    final_days = models.PositiveIntegerField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)

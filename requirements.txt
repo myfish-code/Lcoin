@@ -5,3 +5,5 @@ djangorestframework-simplejwt
 Pillow
 django-cors-headers
 django-environ
+gunicorn
+whitenoise

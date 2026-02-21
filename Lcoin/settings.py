@@ -68,10 +68,12 @@ REST_FRAMEWORK = {
 
 ROOT_URLCONF = 'Lcoin.urls'
 
+FRONTEND_DIST_DIR = os.path.join(BASE_DIR, '../frontend/dist')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,6 +84,9 @@ TEMPLATES = [
         },
     },
 ]
+
+if os.path.exists(FRONTEND_DIST_DIR):
+    TEMPLATES[0]['DIRS'].append(FRONTEND_DIST_DIR)
 
 WSGI_APPLICATION = 'Lcoin.wsgi.application'
 
@@ -129,14 +134,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+STATICFILES_DIRS = []
+
+backend_static = os.path.join(BASE_DIR, 'static')
+if os.path.exists(backend_static):
+    STATICFILES_DIRS.append(backend_static)
+
+if os.path.exists(FRONTEND_DIST_DIR):
+    STATICFILES_DIRS.append(FRONTEND_DIST_DIR)
+    
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 CORS_ALLOW_ALL_ORIGINS = DEBUG

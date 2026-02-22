@@ -146,6 +146,9 @@ if os.path.exists(FRONTEND_DIST_DIR):
     STATICFILES_DIRS.append(FRONTEND_DIST_DIR)
     
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },

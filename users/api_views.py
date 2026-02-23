@@ -73,8 +73,8 @@ class RegisterAPIView(APIView):
                     "refresh": str(refresh),
                     "user": ClientSerializer(user).data
                     }, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            print(f"Ошибка регистрации: {e}")
+        except:
+            
             return Response({"error": "error_register"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -83,7 +83,11 @@ class ProfileAPIView(APIView):
 
     def get(self, request, user_id, choice_info):
 
-        user = get_object_or_404(Client, id=user_id)
+        user = Client.objects.filter(id=user_id).first()
+        if not user:
+            return Response({
+                "error": "incorrect_data"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if choice_info not in ("executor", "customer"):
             choice_info = "executor"
@@ -137,12 +141,13 @@ class ProfileAPIView(APIView):
 class LanguageAPIView(APIView):
     permission_classes=[IsAuthenticated]
 
+    
     def patch(self, request, lang):
         lang_lists = ["uk", "ru", "sk", "en"]
 
         if lang not in lang_lists:
             return Response({
-                "error": "Некорректные данные языка"
+                "error": "incorrect_data"
             }, status=status.HTTP_400_BAD_REQUEST)
 
         user = request.user
@@ -163,14 +168,14 @@ class VerifyPhotoAPIView(APIView):
 
         if not photo_file:
             return Response({
-                "error": "No photo uploaded"
+                "error": "no_photo_upload"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         if photo_file.size > 5 * 1024 * 1024:
-            return Response({"error": "File too large (max 5MB)"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "to_large_file"}, status=status.HTTP_400_BAD_REQUEST)
         
         if not photo_file.name.lower().endswith(('.png', '.jpg', '.jpeg')):
-            return Response({"error": "Invalid file type"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "invalid_type_file"}, status=status.HTTP_400_BAD_REQUEST)
         
         user = request.user
 
@@ -179,7 +184,7 @@ class VerifyPhotoAPIView(APIView):
 
         if user.verification_status not in ('unverified', 'rejected'):
             return Response({
-                "error": "Invalid verification status"
+                "error": "invalid_verification_status"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         user.verification_photo = photo_file

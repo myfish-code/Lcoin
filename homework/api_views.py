@@ -1,7 +1,9 @@
 from importlib.readers import FileReader
 import math
+import stat
 
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from django.utils import timezone
 from datetime import timedelta
 
@@ -112,6 +114,11 @@ class SearchOrderDetailAPIView(APIView):
 
     def get(self, request, order_id):
         
+        try:
+            order_id = int(order_id) 
+        except ValueError:
+            raise Http404("Invalid ID format")
+        
         order = get_object_or_404(HomeworkOrder.objects.select_related('author', 'executor').prefetch_related('reviews'), id=order_id)
 
         priority_status = Case(
@@ -149,14 +156,23 @@ class OrderAssignmentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, bid_id):
-        bid = get_object_or_404(ResponseBid.objects.select_related('order', 'order__author', 'order__executor').prefetch_related('order__reviews'), id=bid_id)
+        bid = ResponseBid.objects.filter(id=bid_id).select_related(
+            'order', 'order__author', 'order__executor'
+        ).prefetch_related(
+            'order__reviews'
+        ).first()
+
+        if not bid:
+            return Response({
+                "error": "not_found_bid"
+            }, status=status.HTTP_400_BAD_REQUEST)
         order = bid.order
         final_price = request.data.get("final_price")
         final_days = request.data.get("final_days")
 
         if order.author != request.user:
             return Response({
-                "error": "У вас  нет права отправлять офер"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
 
 
@@ -194,17 +210,24 @@ class OrderAssignmentAPIView(APIView):
                     "order": HomeworkOrderSerializer(order).data 
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка назначения исполнителя: {e}")
             return Response({
-                "error": "Ошибка назначения исполнителя"
+                "error": "assignment_post"
             }, status=status.HTTP_400_BAD_REQUEST)
         
     def delete(self, request, order_id):
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
+        order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'author', 'selected_bid', 'executor'
-            ).prefetch_related('reviews'), id=order_id)
+            ).prefetch_related('reviews').first()
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
-        message_to_delete = get_object_or_404(Message, order=order, type='offer')
+        message_to_delete = Message.objects.filter(order=order, type='offer').first()
+        if not message_to_delete or message_to_delete.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         chat = message_to_delete.chat
 
@@ -212,7 +235,7 @@ class OrderAssignmentAPIView(APIView):
 
         if order.author != request.user:
             return Response({
-                "error": "У вас  нет права отправлять офер"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
     
         try:
@@ -240,49 +263,58 @@ class OrderAssignmentAPIView(APIView):
                     "order": HomeworkOrderSerializer(order).data
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка назначения исполнителя: {e}")
             return Response({
-                "error": "Ошибка назначения исполнителя"
+                "error": "assignment_delete"
             }, status=status.HTTP_400_BAD_REQUEST)
         
 class OrderConfirmationAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id, message_id):
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
+        
+        order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'selected_bid', 'author', 'selected_bid__author', 'executor'
-        ), id=order_id)
+        ).first()
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
 
         if order.status != "pending":
             return Response({
-                "error": "Заказ уже в работе или завершен"
+                "error": "order_in_work"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         if not order.selected_bid:
-            return Response({"error": "Ставка не выбрана"}, status=400)
+            return Response({"error": "not_found_bid"}, status=400)
         
-        message = get_object_or_404(Message.objects.select_related(
+        message = Message.objects.filter(id=message_id, order=order).select_related(
             'order',
             'sender',
             'order__dispute'
         ).prefetch_related(
             'order__reviews'
-        ), id=message_id, order=order)
+        ).first()
+        if not message or message.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         final_price = message.final_price
         final_days = message.final_days
 
         if not final_days or not final_price:
             return Response({
-                "error": "Нет данных цены или дней на выполнение"
-            }, status=400)
+                "error": "no_data"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         bid = order.selected_bid
         bid_author = bid.author
         
         if bid_author != request.user:
             return Response({
-                "error": "У вас  нет права принимать ставку"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
         try:
             with transaction.atomic():
@@ -312,26 +344,34 @@ class OrderConfirmationAPIView(APIView):
                     "message": MessageSerializer(message,context={'request': request}).data if message else None
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка потверждения исполнителя: {e}")
             return Response({
-                "error": "Ошибка удаления оффера"
+                "error": "confirm_order_post"
             }, status=status.HTTP_400_BAD_REQUEST)
         
     def delete(self, request, order_id, message_id):
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
-            'selected_bid', 'author', 'executor', 'selected_bid__author'
-        ), id=order_id)
-        message = get_object_or_404(Message.objects.select_related(
+        order = HomeworkOrder.objects.filter(id=order_id).select_related(
+            'selected_bid', 'author', 'selected_bid__author', 'executor'
+        ).first()
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        message = Message.objects.filter(id=message_id, order=order).select_related(
             'order',
             'sender',
             'order__dispute'
         ).prefetch_related(
             'order__reviews'
-        ), id=message_id, order=order)
+        ).first()
+        if not message:
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if (not order.selected_bid or order.selected_bid.author != request.user):
             return Response({
-                "error": "У вас  нет права отклонять ставку"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
         
         bid = order.selected_bid
@@ -353,41 +393,50 @@ class OrderConfirmationAPIView(APIView):
                     "message": MessageSerializer(message,context={'request': request}).data if message else None
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка удаления оффера: {e}")
             return Response({
-                "error": "Ошибка удаления оффера"
+                "error": "confirm_order_delete"
             }, status=status.HTTP_400_BAD_REQUEST)
 
 class OrderCompletionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id, message_id):
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
-            'author', 'executor', 'selected_bid'
-        ), id=order_id)
-        message = get_object_or_404(Message.objects.select_related(
+        
+        order = HomeworkOrder.objects.filter(id=order_id).select_related(
+            'selected_bid', 'author', 'executor'
+        ).first()
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        message = Message.objects.filter(id=message_id, order=order).select_related(
             'order',
             'sender',
             'order__dispute'
         ).prefetch_related(
             'order__reviews'
-        ), id=message_id, order=order)
+        ).first()
+        if not message or message.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if request.user != order.author:
             return Response({
-                "error": "У вас  нет права потверждать выполнения заказа"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
 
         if order.status != "in_progress":
             return Response({
-                "error": "Можно подтвердить выполнение только того заказа, который находится в работе"
+                "error": "incorrect_order_status"
             }, status=status.HTTP_400_BAD_REQUEST)
         
 
         bid = order.selected_bid
         if not bid:
             return Response({
-                "error": "Исполнитель не найден"
+                "error": "not_found_executor"
                 }, status=status.HTTP_400_BAD_REQUEST)
         try:
             with transaction.atomic():
@@ -404,31 +453,38 @@ class OrderCompletionAPIView(APIView):
                     "message": MessageSerializer(message,context={'request': request}).data if message else None
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка потверждения выполнения заказа: {e}")
             return Response({
-                "error": "Ошибка потверждения выполнения заказа"
+                "error": "confirm_order_complete"
             }, status=status.HTTP_400_BAD_REQUEST)
     
 class OrderReviewAPIView(APIView):
     def post(self, request, order_id, message_id):
-        
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
+        order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'author', 'executor'
-        ), id=order_id)
-        message = get_object_or_404(Message.objects.select_related(
+        ).first()
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        message = Message.objects.filter(id=message_id, order=order).select_related(
             'order',
             'sender',
             'order__dispute'
         ).prefetch_related(
             'order__reviews'
-        ), id=message_id, order=order)
+        ).first()
+        if not message or message.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         text = request.data.get("text")
         grade = request.data.get("grade")
         
         if not text or not grade:
             return Response({
-                "error": "Нет всех данных"
+                "error": "no_data"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         try:   
@@ -437,7 +493,7 @@ class OrderReviewAPIView(APIView):
                 raise ValueError
         except (TypeError, ValueError):
             return Response({
-                "error": "Оценка должна быть числом"
+                "error": "price_abs"
                 }, status=400)
 
         type_user = ""
@@ -464,7 +520,7 @@ class OrderReviewAPIView(APIView):
 
                 else:
                     return Response({
-                        "error": "У вас нет прав выполнять это действие"
+                        "error": "not_allow"
                     }, status=status.HTTP_403_FORBIDDEN)
 
                 OrderReview.objects.create(
@@ -479,33 +535,48 @@ class OrderReviewAPIView(APIView):
                     "message": MessageSerializer(message,context={'request': request}).data if message else None
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка отправки отзыва: {e}")
             return Response({
-                "error": "Ошибка отправки отзыва"
+                "error": "no_message_send"
             }, status=status.HTTP_400_BAD_REQUEST)
 
 class OrderDisputeAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id, message_id):
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
+        
+        order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'author', 'executor'
-        ), id=order_id)
-        message = get_object_or_404(Message, id=message_id, order=order)
+        ).first()
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        message = Message.objects.filter(id=message_id, order=order).select_related(
+            'order',
+            'sender',
+            'order__dispute'
+        ).prefetch_related(
+            'order__reviews'
+        ).first()
+        if not message or message.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if order.status != "in_progress":
             return Response({
-                "error": "Спор можно открыть только для заказов в статусе 'В работе'"
+                "error": "incorrect_order_status"
             }, status=status.HTTP_403_FORBIDDEN)
 
         if request.user not in (order.author, order.executor):
             return Response({
-                "error": "У вас нет прав открывать спор по этому заказу"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
         
         if OrderDispute.objects.filter(order=order).exists():
              return Response({
-                 "error": "Спор по этому заказу уже открыт"
+                 "error": "dispute_exist"
                  }, status=status.HTTP_400_BAD_REQUEST)
         
         opponent = order.executor if order.author == request.user else order.author
@@ -528,9 +599,8 @@ class OrderDisputeAPIView(APIView):
                     "message": MessageSerializer(message,context={'request': request}).data if message else None
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка создания диспута: {e}")
             return Response({
-                "error": "Ошибка создания диспута"
+                "error": "create_dispute_chat"
             }, status=status.HTTP_400_BAD_REQUEST)
         
 class MyOrdersAPIView(APIView):
@@ -600,17 +670,24 @@ class MyOrdersAPIView(APIView):
             current_status = "open"
         
         if not all([name, price, deadline_time, subject]):
-            return Response({"error": "Заполните все обязательные поля"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "fields_empty"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            price = int(price)
+            if price < 1:
+                raise ValueError
+        except (TypeError, ValueError):
+            return Response({
+                "error": "price_abs"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             days = int(deadline_time)
-            price = int(price)
-
-            if days < 1 or price < 1:
+            if days < 1:
                 raise ValueError
             deadline_date = timezone.now() + timedelta(days=days)
         except (TypeError, ValueError):
-            return Response({"error": "Срок должен быть числом (количество дней)"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "term_abs"}, status=status.HTTP_400_BAD_REQUEST)
         
 
         try:
@@ -641,21 +718,25 @@ class MyOrdersAPIView(APIView):
                     "maxPage": maxPage
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка создания заказа: {e}")
             return Response({
-                "error": "Ошибка создания заказа"
+                "error": "order_create" 
             }, status=status.HTTP_400_BAD_REQUEST)
+        "Ошибка создания заказа"
 
     def delete(self, request, order_id):
         user = request.user
-
-        order = get_object_or_404(HomeworkOrder.objects.select_related(
+        order = HomeworkOrder.objects.filter(id=order_id, author=user).select_related(
             'author', 'executor'
-        ), id=order_id, author=user)
+        ).first()
+        
+        if not order:
+            return Response({
+                "error": "not_found_order"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if order.status not in ("open", "pending"):
             return Response({
-                "error": "Вы не можете удалять заказ на этом уровне"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
         
 
@@ -711,17 +792,17 @@ class MyBidsAPIView(APIView):
 
         if order.status not in ("open", "pending"):
             return Response({
-                "error": "Заказ уже в работе или завершен"
+                "error": "order_already_has_candidate"
             },status=status.HTTP_400_BAD_REQUEST)
 
         if order.author == request.user:
             return Response({
-                "error": "Нельзя делать ставку на свой заказ"
+                "error": "not_allow"
                 }, status=status.HTTP_403_FORBIDDEN)
     
         if order.bids.filter(author=request.user).exists():
             return Response({
-                "error": "Вы уже сделали ставку на этот заказ"
+                "error": "not_allow"
             },status=status.HTTP_400_BAD_REQUEST)
 
         description = request.data.get("description")
@@ -729,15 +810,23 @@ class MyBidsAPIView(APIView):
         days_to_complete = request.data.get("days_to_complete")
 
         if not all([description, price, days_to_complete]):
-            return Response({"error": "Заполните все обязательные поля"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "fields_empty"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            price = int(price)
+            if price < 1:
+                raise ValueError
+        except (TypeError, ValueError):
+            return Response({
+                "error": "price_abs"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             days = int(days_to_complete)
-            price = int(price)
-            if days < 1 or price < 1:
+            if days < 1:
                 raise ValueError
         except (TypeError, ValueError):
-            return Response({"error": "Срок должен быть числом (количество дней)"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "term_abs"}, status=status.HTTP_400_BAD_REQUEST)
         
         user_bid = ResponseBid.objects.create(
             description=description,
@@ -764,14 +853,14 @@ class MyBidsAPIView(APIView):
 
         if not bid:
             return Response({
-                "error": "У вас нет прав выполнять это действие"
+                "error": "not_found"
             }, status=status.HTTP_403_FORBIDDEN)
 
         order = bid.order
 
         if order.status not in ("open", "pending"):
             return Response({
-                "error": "Вы не можете удалять ставку на этом уровне"
+                "error": "order_already_has_candidate"
             }, status=status.HTTP_403_FORBIDDEN)
         
         bid.delete()
@@ -787,6 +876,7 @@ class MyDisputesAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, dispute_status="open"):
+    
         user = request.user
 
         user_participant = Q(author=user) | Q(opponent=user)
@@ -847,7 +937,7 @@ class DisputeDetailAPIView(APIView):
 
         if not dispute.order:
             return Response({
-                "error": "Нет данных заказа"
+                "error": "not_found_order"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         order = dispute.order
@@ -911,20 +1001,25 @@ class DisputeDetailAPIView(APIView):
         
         else:
             return Response({
-                "error": "incorrect mode"
+                "error": "incorrect_data"
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
     def post(self, request, dispute_id):
         user = request.user
-
-        dispute = get_object_or_404(OrderDispute, (Q(author=user) | Q(opponent=user)) & Q(id=dispute_id))
+    
+        dispute = OrderDispute.objects.filter((Q(author=user) | Q(opponent=user)) & Q(id=dispute_id)).first()
+        if not dispute:
+            return Response({
+                "error": "not_found_dispute"
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
 
         description = request.data.get("description")
 
         if not description or description.strip() == "":
             return Response({
-                "error": "Сообщение не может быть пустым"
+                "error": "text_empty"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         try:
@@ -948,8 +1043,7 @@ class DisputeDetailAPIView(APIView):
                     "message": DisputeMessageSerializer(new_message).data
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Ошибка отправки сообщения в диспуте: {e}")
             return Response({
-                "error": "Ошибка отправки сообщения в диспуте"
+                "error": "no_message_send"
             }, status=status.HTTP_400_BAD_REQUEST)
     

@@ -20,6 +20,7 @@ class MyChatsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        
         chats = Conversation.objects.filter(
             Q(user1=request.user) | Q(user2=request.user)
         ).select_related('user1', 'user2', 'last_message')
@@ -34,11 +35,15 @@ class CreateChatAPIView(APIView):
     def post(self, request, user_id):
         if request.user.id == user_id:
             return Response({
-                "error": "Вы не можете создавать чат с самим собой"
+                "error": "not_allow_chat_myself" #"Вы не можете создавать чат с самим собой"
             }, status=status.HTTP_403_FORBIDDEN)
         
         user1 = request.user
-        user2 = get_object_or_404(Client, id=user_id)
+        user2 = Client.objects.filter(id=user_id).first()
+        if not user2:
+            return Response({
+                "error": "not_found_user"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         if user1.id > user2.id:
             user1,user2 = user2, user1
@@ -53,27 +58,27 @@ class CreateChatAPIView(APIView):
                 }, status=status.HTTP_200_OK)
             
         except Exception as e:
-            print(f"Ошибка создания чата: {e}")
             return Response({
-                "error": "Ошибка создания чата"
+                "error": "create_chat"
             }, status=status.HTTP_400_BAD_REQUEST)
 
 class ChatAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, chat_id):
-        chat = get_object_or_404(
-            Conversation.objects.select_related(
+        chat = Conversation.objects.filter(id=chat_id).select_related(
                 'user1',
                 'user2',
                 'last_message'
-                ),
-            id=chat_id
-        )
+                ).first()
+        if not chat:
+            return Response({
+                "error": "not_found_chat"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if request.user not in [chat.user1, chat.user2]:
             return Response({
-                "error": "У вас нет права на эту переписку"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
         
         
@@ -81,7 +86,7 @@ class ChatAPIView(APIView):
 
         if not text:
             return Response({
-                "error": "No message send"
+                "error": "text_empty"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         try: 
@@ -98,17 +103,21 @@ class ChatAPIView(APIView):
                 }, status=status.HTTP_200_OK)
             
         except Exception as e:
-            print(f"Ошибка создания чата: {e}")
             return Response({
-                "error": "Ошибка отправки сообщения"
+                "error": "no_message_send"
             }, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request, chat_id):
-        chat = get_object_or_404(Conversation, id=chat_id)
+        
+        chat = Conversation.objects.filter(id=chat_id).first()
+        if not chat:
+            return Response({
+                "error": "not_found_chat"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if request.user not in [chat.user1, chat.user2]:
             return Response({
-                "error": "У вас нет права на эту переписку"
+                "error": "not_allow"
             }, status=status.HTTP_403_FORBIDDEN)
 
         first_message_id = request.query_params.get("first_message_id", None)
@@ -168,14 +177,20 @@ class ChatAPIView(APIView):
 
         else:
             return Response({
-                "error": "incorrect mode"
+                "error": "incorrect_data"
             }, status=status.HTTP_400_BAD_REQUEST)
 
 class MessageDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
     
     def delete(self, request, message_id):
-        message = get_object_or_404(Message, id=message_id, sender=request.user)
+        
+        message = Message.objects.filter(id=message_id, sender=request.user).first()
+        
+        if not message or message.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
         chat = message.chat
 
         try:
@@ -189,9 +204,8 @@ class MessageDetailAPIView(APIView):
                 chat.save()
 
         except Exception as e:
-            print(f"Ошибка создания чата: {e}")
             return Response({
-                "error": "Ошибка удаления сообщения"
+                "error": "delete_message"
             }, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
@@ -201,7 +215,12 @@ class MessageDetailAPIView(APIView):
 
 
     def patch(self, request, message_id):
-        message = get_object_or_404(Message, id=message_id, sender=request.user)
+        
+        message = Message.objects.filter(id=message_id, sender=request.user).first()
+        if not message or message.type == "deleted":
+            return Response({
+                "error": "not_found_message"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         messageText = request.data.get("text")
     

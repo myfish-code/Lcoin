@@ -73,7 +73,7 @@ FRONTEND_DIST_DIR = os.path.join(BASE_DIR, '../frontend/dist')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), FRONTEND_DIST_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,9 +84,6 @@ TEMPLATES = [
         },
     },
 ]
-
-if os.path.exists(FRONTEND_DIST_DIR):
-    TEMPLATES[0]['DIRS'].append(FRONTEND_DIST_DIR)
 
 WSGI_APPLICATION = 'Lcoin.wsgi.application'
 

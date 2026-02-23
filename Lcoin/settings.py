@@ -73,7 +73,7 @@ FRONTEND_DIST_DIR = os.path.join(BASE_DIR, '../frontend/dist')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), FRONTEND_DIST_DIR],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), '/app/frontend/dist',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

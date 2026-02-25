@@ -1,8 +1,9 @@
 import math
+from pydoc import text
 
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from users.models import Client
+from users.models import Client, FeedBack
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -194,4 +195,26 @@ class VerifyPhotoAPIView(APIView):
 
         return Response({
             "error": None
+        }, status=status.HTTP_200_OK)
+    
+
+class ContactFormView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
+
+        message = request.data.get("feedback")
+
+        if not message:
+            return Response({
+                "error": "text_empty"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        FeedBack.objects.create(
+            author=request.user,
+            text=message
+        )
+
+        return Response({
+            "success": True
         }, status=status.HTTP_200_OK)

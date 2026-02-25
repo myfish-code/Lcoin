@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
 
 LANGUAGE_CHOICES = [
     ("en", "English"),
@@ -39,3 +40,10 @@ class Client(AbstractUser):
         verbose_name="Фото для верификации",
     )
     verification_rejected_reason = models.CharField(null=True, blank=True)
+
+class FeedBack(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                  related_name='feedbacks')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -156,6 +156,7 @@ class ChatAPIView(APIView):
             })
 
         elif mode == "getUpdatedMessages":
+            
             filters = Q(chat=chat)
             count_messages = Message.objects.filter(filters).count()
 

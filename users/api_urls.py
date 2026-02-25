@@ -4,7 +4,8 @@ from users.api_views import (
     RegisterAPIView,
     ProfileAPIView, 
     LanguageAPIView,
-    VerifyPhotoAPIView
+    VerifyPhotoAPIView,
+    ContactFormView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('profile/<int:user_id>/<str:choice_info>/', ProfileAPIView.as_view()),
     path('change-language/<str:lang>/', LanguageAPIView.as_view()),
     path('verify/', VerifyPhotoAPIView.as_view()),
+    path('contact/', ContactFormView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
     
 ]

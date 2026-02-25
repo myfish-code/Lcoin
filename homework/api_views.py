@@ -853,7 +853,7 @@ class MyBidsAPIView(APIView):
 
         if not bid:
             return Response({
-                "error": "not_found"
+                "error": "not_found_bid"
             }, status=status.HTTP_403_FORBIDDEN)
 
         order = bid.order

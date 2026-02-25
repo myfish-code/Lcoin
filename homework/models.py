@@ -14,10 +14,16 @@ class HomeworkOrder(models.Model):
     objects = OrderManager()
     
     SUBJECT_CHOICES = [
-        ('MATH', 'Математика'),
-        ('ENG', 'Английский'),
-        ('PHYS', 'Физика'),
-        ('CHEM', 'Химия'),
+        ('math', 'Математика'),
+        ('inf', 'Информатика'),
+        ('phys', 'Физика'),
+        ('biology', 'Биология'),
+        ('economy', 'Економика'),
+        ('eng', 'Английский'),
+        ('chem', 'Химия'),
+        ('history', 'История'),
+        ('art', 'Исскуство'),
+        ('other', 'Другое'),
     ]
 
     STATUS_CHOICES = [

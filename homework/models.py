@@ -40,6 +40,12 @@ class HomeworkOrder(models.Model):
 
     price = models.IntegerField()
 
+    order_file = models.FileField(
+        upload_to="order_file/%Y/%m/%d/",
+        blank=True,
+        null=True,
+        verbose_name="Файл заказа"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     deadline_time = models.DateTimeField()
 

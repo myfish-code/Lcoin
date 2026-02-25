@@ -165,6 +165,7 @@ class VerifyPhotoAPIView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
+        
         photo_file = request.FILES.get('photo')
 
         if not photo_file:
@@ -173,7 +174,7 @@ class VerifyPhotoAPIView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
         
         if photo_file.size > 5 * 1024 * 1024:
-            return Response({"error": "to_large_file"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "to_large_file_5mb"}, status=status.HTTP_400_BAD_REQUEST)
         
         if not photo_file.name.lower().endswith(('.png', '.jpg', '.jpeg')):
             return Response({"error": "invalid_type_file"}, status=status.HTTP_400_BAD_REQUEST)

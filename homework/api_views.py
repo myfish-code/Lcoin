@@ -144,7 +144,7 @@ class SearchOrderDetailAPIView(APIView):
         serializer_bids = ResponseBidSerializer(bids, many=True)
 
         return Response({
-            "order": HomeworkOrderSerializer(order).data,
+            "order": HomeworkOrderSerializer(order, context={'request': request}).data,
             "bids": serializer_bids.data,
             "is_author": is_author,
             "user_bid_id": user_bid.id if user_bid else None,
@@ -638,7 +638,7 @@ class MyOrdersAPIView(APIView):
             "myOrders": serializer_myOrders.data,
             "maxPage": maxPage
         }, status=status.HTTP_200_OK)
-    
+  
     def post(self, request):     
         
         name = request.data.get("name")
@@ -649,10 +649,15 @@ class MyOrdersAPIView(APIView):
 
         current_status = request.data.get("currentStatus")
 
+        file_upload = request.FILES.get("file_upload")
+
+        if file_upload:
+            if file_upload.size > 10 * 1024 * 1024:
+                return Response({"error": "to_large_file_10mb"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             page = int(request.data.get("page", 1))
             page_size = int(request.data.get("page_size", 3))
-        
+     
             if page < 1:
                 page = 1
             if page_size < 1:
@@ -692,13 +697,15 @@ class MyOrdersAPIView(APIView):
 
         try:
             with transaction.atomic():
+
                 HomeworkOrder.objects.create(
                     name=name,
                     description=description,
                     price=price,
                     deadline_time=deadline_date,
                     subject=subject,
-                    author=request.user
+                    author=request.user,
+                    order_file=file_upload if file_upload else None
                 )
                 maxPage = math.ceil(HomeworkOrder.objects.filter(author=request.user, status="open").count() / page_size)
                 if maxPage == 0:

@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=django_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=qwerty  
+
+  backend:
+    build: ./backend
+    command: gunicorn Lcoin.wsgi:application --bind 0.0.0.0:8000 --workers 9 --access-logfile -
+    volumes:
+      - ./backend:/app
+      - ./media_data:/app/media
+      - ./frontend:/frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  frontend:
+    build: 
+      context: ./frontend
+    ports:
+      - "5173:5173" 
+    volumes:
+      - ./frontend:/app    
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    

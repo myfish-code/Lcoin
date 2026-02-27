@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 *.pyc
 
+.pylintrc
 .verification_docs/
 verification_docs/**/*
 # Виртуальное окружение

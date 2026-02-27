@@ -7,3 +7,4 @@ django-cors-headers
 django-environ
 gunicorn
 whitenoise
+django-cleanup

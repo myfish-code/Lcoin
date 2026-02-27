@@ -213,8 +213,6 @@ class MessageDetailAPIView(APIView):
             "message_delete": MessageSerializer(message,context={'request': request}).data
         }, status=status.HTTP_200_OK)
 
-
-
     def patch(self, request, message_id):
         
         message = Message.objects.filter(id=message_id, sender=request.user).first()

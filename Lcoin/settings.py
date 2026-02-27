@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'homework',
     'chat',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

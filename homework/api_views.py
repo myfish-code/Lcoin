@@ -156,6 +156,7 @@ class OrderAssignmentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, bid_id):
+        
         bid = ResponseBid.objects.filter(id=bid_id).select_related(
             'order', 'order__author', 'order__executor'
         ).prefetch_related(
@@ -215,6 +216,7 @@ class OrderAssignmentAPIView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
         
     def delete(self, request, order_id):
+
         order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'author', 'selected_bid', 'executor'
             ).prefetch_related('reviews').first()
@@ -349,6 +351,7 @@ class OrderConfirmationAPIView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
         
     def delete(self, request, order_id, message_id):
+
         order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'selected_bid', 'author', 'selected_bid__author', 'executor'
         ).first()
@@ -401,7 +404,7 @@ class OrderCompletionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id, message_id):
-        
+
         order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'selected_bid', 'author', 'executor'
         ).first()
@@ -459,6 +462,7 @@ class OrderCompletionAPIView(APIView):
     
 class OrderReviewAPIView(APIView):
     def post(self, request, order_id, message_id):
+        
         order = HomeworkOrder.objects.filter(id=order_id).select_related(
             'author', 'executor'
         ).first()
@@ -731,6 +735,7 @@ class MyOrdersAPIView(APIView):
         "Ошибка создания заказа"
 
     def delete(self, request, order_id):
+        
         user = request.user
         order = HomeworkOrder.objects.filter(id=order_id, author=user).select_related(
             'author', 'executor'
@@ -854,6 +859,7 @@ class MyBidsAPIView(APIView):
         }, status=status.HTTP_201_CREATED)
     
     def delete(self, request, bid_id):
+        
         bid = ResponseBid.objects.filter(id=bid_id, author=request.user).select_related(
             'order'
         ).first()

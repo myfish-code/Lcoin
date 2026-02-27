@@ -203,7 +203,6 @@ class ContactFormView(APIView):
     permission_classes=[IsAuthenticated]
 
     def post(self, request):
-
         message = request.data.get("feedback")
 
         if not message:

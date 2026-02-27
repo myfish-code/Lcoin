@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -43,3 +44,14 @@ venv/
 __pycache__/
 *.sqlite3
 .DS_Store
+=======
+.env
+
+postgres_data/
+
+
+node_modules/
+dist/
+__pycache__/
+*.pyc
+>>>>>>> cf0936bdf9fd5cb54bdbd8426595fddff88d4265

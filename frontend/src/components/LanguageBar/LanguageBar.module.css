@@ -1,0 +1,40 @@
+.LanguageContainer {
+    width: fit-content;    
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.FlagItem {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 6px;
+    padding: 2px 0px;
+    padding-right: 5px;
+    transition: 0.2s;
+}
+.FlagItem:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.Active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.flag {
+    width: 40px;
+    height: 20px;
+    border-radius: 5px;
+}
+
+@media (max-width: 360px) {
+    .LanguageContainer {
+        gap: 6px;
+    }
+    .flag {
+        width: 30px;
+        height: 15px;
+    }
+}

@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+.verification_docs/
+verification_docs/**/*
+# Виртуальное окружение
+venv/
+env/
+.venv/
+
+# Логи и файлы базы данных
+*.log
+*.sqlite3
+
+# Django
+*.pot
+*.pyc
+*.mo
+*.log
+*.db
+media/
+staticfiles/
+
+# Файлы IDE
+.vscode/
+*.idea/
+
+# Сборки и пакеты
+*.egg-info/
+dist/
+build/
+
+# Секреты
+.env
+
+.env
+venv/
+__pycache__/
+*.sqlite3
+.DS_Store

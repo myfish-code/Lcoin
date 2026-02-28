@@ -1,0 +1,141 @@
+/* Базовый контейнер сообщения */
+.MessageItem {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    max-width: 85%;
+    width: fit-content;
+    position: relative;
+}
+
+/* Направления */
+.Opponent { align-self: flex-start; }
+.Me { align-self: flex-end; }
+.Admin { align-self: center; max-width: 90%; }
+
+/* Имя автора и Дата */
+.AuthorName {
+    font-size: 11px;
+    color: #888;
+    width: 100%;
+}
+
+.isMe {
+    text-align: right;
+    padding-right: 4px;
+}
+
+.isNotMe {
+    text-align: left;
+    padding-left: 4px;
+}
+
+.Date {
+    font-size: 10px;
+    opacity: 0.6;
+    align-self: flex-end;
+    margin-top: 4px;
+}
+
+/* Контентный блок (пузырь) */
+.TextContent {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    transition: background 0.3s ease;
+}
+
+/* Стилизация обычных текстовых пузырей */
+.Opponent .TextContent {
+    background-color: #333;
+    color: #fff;
+    border-radius: 14px 14px 14px 4px;
+}
+
+.Me .TextContent {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 14px 14px 4px 14px;
+}
+
+/* Стилизация СИСТЕМНЫХ сообщений (перебиваем цвета выше) */
+/* Используем :global или просто каскад, чтобы типы заказов выглядели иначе */
+.offer, .offer_accepted, .offer_declined, .dispute, .order_completed {
+    border-left: 6px solid transparent !important;
+    color: #333 !important; /* В системных сообщениях текст лучше темный */
+}
+
+.offer { border-left-color: #3498db !important; background-color: #f0f7ff !important; }
+.offer_accepted { border-left-color: #2ecc71 !important; background-color: #f4fff7 !important; }
+.offer_declined { border-left-color: #95a5a6 !important; background-color: #f9f9f9 !important; }
+.dispute { border-left-color: #e74c3c !important; background-color: #fff5f5 !important; }
+.order_completed { border-left-color: #9b59b6 !important; background-color: #faf5ff !important; }
+
+.deleted {
+    /* Легкий темно-серый налет, чтобы чуть-чуть отделить от черного фона */
+    background-color: rgba(255, 255, 255, 0.03) !important; 
+    
+    /* Тонкая, едва заметная рамка */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    
+    /* Цвет текста — приглушенный белый/серый */
+    color: #666 !important;
+    
+    font-size: 0.8rem;
+    font-style: italic; /* Оставляем, раз тебе понравилось */
+    padding: 5px 14px;
+    border-radius: 12px;
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    
+    /* Убираем свечение, оставляем плоский стиль */
+    box-shadow: none !important;
+}
+/* Сообщения админа */
+.Admin .TextContent {
+    background-color: #222 !important;
+    border: 1px solid #ffcc00 !important;
+    color: #ffcc00 !important;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Интерактивная часть (кнопки меню) */
+.MessageContent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.Me .MessageContent { flex-direction: row-reverse; }
+
+.PointBtn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s;
+}
+
+.MessageItem:hover .PointBtn { opacity: 1; }
+.PointBtn:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+
+.Me  { right: 0; }
+.Opponent { left: 0; }
+
+.EditBtn { color: #4ade80; background: none; border: none; cursor: pointer; }
+.TrashBtn { color: #f87171; background: none; border: none; cursor: pointer; }

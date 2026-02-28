@@ -1,0 +1,245 @@
+.BidContainer {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.selected { border-color: #75db8b;}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.statusBadge {
+    
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+/* Цвета для разных статусов */
+.unverified {
+    background-color: #444;
+    color: #bbb;
+}
+
+.pending {
+    background-color: rgba(255, 165, 0, 0.2); /* Оранжевый прозрачный */
+    color: #ffa500;
+    border: 1px solid rgba(255, 165, 0, 0.4);
+}
+
+.verified {
+    background-color: rgba(0, 255, 0, 0.1); /* Зеленый прозрачный */
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.rejected {
+    background-color: rgba(255, 0, 0, 0.1); /* Красный прозрачный */
+    color: #ff4d4f;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.authorLink {
+    color: #4dabf7;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ExecutorBadge {
+    background: rgba(117, 219, 139, 0.2);
+    color: #75db8b;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.bidMetrics {
+    display: flex;
+    gap: 16px;
+    text-align: right;
+}
+
+.metric .label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.metric .value {
+    font-weight: bold;
+    color: #fff;
+}
+
+.Description {
+    margin: 15px 0;
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.Description p {
+    font-size: 1.05rem;
+    white-space: pre-wrap;       
+    word-break: break-word;    
+    overflow-wrap: break-word;
+    
+    display: block;            
+    -webkit-line-clamp: unset; 
+}
+
+.lockText {
+    padding: 5px;
+    background: rgba(255, 77, 79, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 77, 79, 0.3);
+    color: #ff7875;
+    text-align: center;
+    
+}
+.deleteBtn {
+    background: #111; 
+    color: #ef4444;    
+    border: 1px solid #222;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  
+.deleteBtn:hover {
+    border-color: #ef4444; 
+}
+.disabledBtn {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+
+.AssignBtn {
+    background: #007bff; /* Чистый синий акцент */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.AssignBtn:hover {
+    background: #0056b3; /* Чуть темнее при наведении */
+}
+
+.AssignBtn:active {
+    transform: scale(0.96); /* Легкий отклик при клике */
+}
+
+.formButtons {
+    display: flex;       
+    gap: 8px;           
+    align-items: center; 
+    justify-content: flex-start;  
+    margin-top: 12px; 
+}
+
+.ConfirmOffer {
+    background: #28a745; /* Спокойный зеленый */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ConfirmOffer:hover {
+    background: #218838; /* Зеленый потемнее */
+}
+
+.CancelBtn {
+    background: transparent;
+    color: #888; /* Серый текст */
+    border: 1px solid #444; /* Неяркая рамка */
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.CancelBtn:hover {
+    color: #ff4b4b; /* Краснеет при наведении */
+    border-color: #ff4b4b;
+    background: rgba(255, 75, 75, 0.05); /* Легкий красный налет */
+}
+
+/* Кнопка Отклонить */
+.DeclineOffer {
+    background: transparent;
+    color: #ff4d4d; /* Яркий, но тонкий красный */
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.DeclineOffer:hover {
+    background: #ff4d4d;
+    color: #fff;
+}
+.inputRow {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.inputRow input {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 8px;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.ErrorMessage {
+    color: #ff4d4d;          /* Тот же красный, что и у счетчика */
+    background: #342222;     /* Темно-красный приглушенный фон */
+    border-left: 3px solid #ff4d4d; /* Акцентная полоска слева */
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+@media (max-width:490px) {
+    .formButtons {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

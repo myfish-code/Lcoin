@@ -1,0 +1,102 @@
+.HomeContainer {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    font-family: 'Inter', sans-serif;
+
+}
+
+/* Верхний блок */
+.header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.header h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #ffffff;
+    letter-spacing: -1px;
+}
+
+.header p {
+    font-size: 1.25rem;
+    color: #b0b0b0; 
+    max-width: 700px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+}
+
+.actionsBtn {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.actionsBtn a {
+    text-decoration: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.actionsBtn a:first-child {
+    background-color: #3d5afe;
+    color: white;
+}
+
+.actionsBtn a:first-child:hover {
+    background-color: #536dfe;
+    transform: translateY(-2px);
+}
+
+.actionsBtn a:last-child {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+
+.actionsBtn a:last-child:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #888;
+}
+
+.how_works {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.step {
+    flex: 1;
+    background: #2a2a2a; 
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.step:hover {
+    border-color: #444;
+    transform: translateY(-5px);
+}
+
+.step h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #3d5afe; 
+}
+
+.step p {
+    color: #999;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 916px) {
+    .header h1 { font-size: 2.5rem; }
+    .how_works { flex-direction: column; }
+    .actionsBtn { flex-direction: column; }
+}

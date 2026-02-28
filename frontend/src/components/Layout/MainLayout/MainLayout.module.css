@@ -1,0 +1,227 @@
+.headerFeedBackButton {
+    display: flex;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    transition: transform 0.3s ease-out;
+    align-items: center;
+}
+
+.headerFeedBackButton:hover {
+    transform: translateY(-3px);
+}
+
+.navFeedBackButton {
+    display: none;
+    height: 56px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(80, 80, 80);
+    border-radius: 12px;
+    border: 1px solid #333; 
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    
+}
+
+.navFeedBackButton:active {
+    transform: translateY(-5px);
+    transform: scale(0.98); 
+    background-color: #2a2a2a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.MainLayout {
+    padding-top: 126px;
+    margin: 0 auto;
+    width: 100%;
+    
+    
+}
+
+.Header {
+    position: fixed; /* Фиксируем шапку */
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid rgb(101, 96, 96);
+    background-color: #2a2a2b;
+    z-index: 1000;
+}
+.MainContent, .HeaderContainer, .Nav {
+    max-width: 1024px;
+    margin: 0 auto;   
+    width: 100%;
+    
+}
+.MainContent {
+    padding: 1rem;
+}
+
+.HeaderContainer {
+    display: flex;
+    justify-content: space-between; /* Логотип влево, бургер вправо */
+    align-items: center;         /* Выравнивание по вертикали (строго по центру) */
+    width: 100%;
+    padding: 0 20px; 
+    height: 60px; /* Фиксированная высота шапки помогает выровнять всё внутри */
+}
+
+/* --- СТИЛИ ДЛЯ КОМПЬЮТЕРА (По умолчанию) --- */
+.Nav {
+    display: flex;
+    justify-content: space-between; /* РАСТАЛКИВАЕТ ЭЛЕМЕНТЫ К КРАЯМ */
+    align-items: center;
+    width: 100%; 
+    max-width: 1024px;
+    margin: 0 auto 10px auto;
+    gap: 15px;
+    border-left: 1px solid rgb(101, 96, 96, 0.1);
+}
+
+.Nav a {
+    text-decoration: none;
+}
+
+.Burger {
+    margin-left: auto;
+    display: none; /* Скрыто на ПК */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;  /* Ширина иконок */
+    height: 20px; /* Высота всей иконки */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1000; /* Чтобы была поверх меню */
+}
+
+/* Стили для каждой из трех полосок */
+.Burger span {
+    display: block;
+    width: 100%;
+    height: 3px; /* Толщина полоски */
+    background-color: white; /* Цвет полосок */
+    border-radius: 3px;
+    transition: all 0.3s ease; /* Для плавной анимации */
+}
+
+.FeedBackButton {
+    border: none;
+    background-color: transparent;
+}
+
+.MenuBtn, .LogoutBtn {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center; /* Текст будет по центру */
+    gap: 8px;
+    height: 56px;
+    padding: 0px 8px; 
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-sizing: border-box; 
+}
+
+.MenuBtn:active, 
+.LogoutBtn:active {
+    transform: scale(0.98);
+}
+
+.MenuBtn:hover {
+    background-color: #3b3a3a;
+}
+
+.LogoutBtn {
+    background-color: #2a1f1f;
+    color: #ff4d4f;
+    border: 1px solid #4a3030;
+    width: auto;             /* На компе кнопка только по размеру текста */
+}
+
+/* Специфично для обычных кнопок */
+.MenuBtn {
+    color: #fff;
+    background-color: #333;
+    border: 1px solid #444;
+    width: auto;
+}
+
+.LogoutBtn:hover {
+    background-color: #352525; 
+    border-color: #ff4d4f;
+}
+
+/* --- СТИЛИ ДЛЯ ТЕЛЕФОНА (Меньше 768px) --- */
+@media (max-width: 950px) {
+    .Nav {
+        gap: 7px;
+    }
+
+    .MenuBtn, .LogoutBtn {
+        padding: 16px 4px;
+    }
+}
+@media (max-width: 848px) {
+    
+    .headerFeedBackButton {
+        display: none;
+    }
+    
+    .navFeedBackButton {
+        display: flex;
+    }
+    .MainLayout {
+        padding-top: 60px;
+    }
+    .Burger {
+        display: flex; /* Показываем бургер */
+    }
+    .Nav {
+        position: fixed;
+        top: 60px;
+        right: -100%; /* Прячем вправо */
+        width: 70%;  /* Ширина меню на телефоне */
+        height: calc(100vh - 60px);
+        background-color: #242424;
+        flex-direction: column; /* В один столбик */
+        overflow-y: auto; 
+        -webkit-overflow-scrolling: touch;
+
+        justify-content: flex-start;
+        padding: 0px 30px;
+        padding-top: 40px;
+        transition: right 0.3s ease; /* Анимация выезда */
+        z-index: 100;
+        background-color: rgba(36, 36, 36, 0.5);
+        gap: 15px;
+    }
+
+    .Nav .LogoutBtn {
+        width: 100%;
+    }
+    /* Когда открыто — выезжаем */
+    .NavOpen {
+        right: 0;
+    }
+
+    .MenuBtn {
+        flex: 0 0 auto;
+        font-size: 18px;
+        width: 100%;
+        border-bottom: 1px solid #333;
+    }
+
+    .LogoutBtn {
+        flex: 0 0 auto;
+        font-size: 18px;
+        width: 100%;
+        border-bottom: 1px solid #333;
+    }
+}

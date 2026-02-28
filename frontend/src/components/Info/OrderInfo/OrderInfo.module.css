@@ -1,0 +1,206 @@
+
+.OrderContainer {
+    background: #1e1e1e; /* Глубокий серый, не чисто черный */
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #333; /* Тонкая граница вместо тени */
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem; 
+    word-wrap: break-word;       /* Переносит длинные слова */
+    overflow-wrap: break-word;
+    word-break: break-word;      /* На всякий случай для ссылок */
+    line-height: 1.3;
+}
+
+/* Статусы с приглушенными цветами для темной темы */
+.status {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.open { background: rgba(40, 167, 69, 0.2); color: #75db8b; }
+.pending { background: rgba(255, 193, 7, 0.2); color: #ffd95b; }
+.in_progress { background: rgba(0, 123, 255, 0.2); color: #74c0fc; }
+.dispute { background: rgba(255, 87, 34, 0.2); color: #ff8a65; }
+.canceled { background: rgba(244, 67, 54, 0.2); color: #e57373; }
+.completed { background: rgba(156, 39, 176, 0.2); color: #ce93d8; }
+
+.divider {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 20px 0;
+}
+
+.fileGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.fileGroup span {
+    font-size: 1.2rem;
+}
+
+.downloadBtn {
+    display: flex;
+    width: 90%;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.startFileName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+}
+
+.endFileName {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.infoGroup {
+    margin-bottom: 30px;
+}
+
+.infoGroup label, .infoItem label {
+    display: block;
+    color: #888; /* Тусклый текст для подписей */
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.infoGroup p {
+    line-height: 1.6;
+    color: #ccc;
+    font-size: 1.05rem;
+    white-space: pre-wrap;       /* ОЧЕНЬ ВАЖНО: сохраняет переносы строк и пробелы юзера */
+    word-break: break-word;      /* Чтобы длинные слова не ломали контейнер */
+    overflow-wrap: break-word;
+    
+    /* Убираем ограничения, которые были в карточке */
+    display: block;              /* Возвращаем обычный режим */
+    -webkit-line-clamp: unset;   /* Снимаем лимит строк */
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+    padding: 15px;
+    background: #252525; /* Чуть светлее основного фона для выделения */
+    border-radius: 12px;
+}
+
+.authorLink {
+    color: #4dabf7; /* Приятный голубой */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.authorLink:hover {
+    color: #74c0fc;
+    text-decoration: underline;
+}
+
+.price {
+    font-size: 1.1rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+.statusBadge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase; /* Делает статус более "официальным" */
+    letter-spacing: 0.5px;
+}
+
+/* Цвета для разных статусов */
+.unverified {
+    background-color: #444;
+    color: #bbb;
+}
+
+.pending {
+    background-color: rgba(255, 165, 0, 0.2); /* Оранжевый прозрачный */
+    color: #ffa500;
+    border: 1px solid rgba(255, 165, 0, 0.4);
+}
+
+.verified {
+    background-color: rgba(0, 255, 0, 0.1); /* Зеленый прозрачный */
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.rejected {
+    background-color: rgba(255, 0, 0, 0.1); /* Красный прозрачный */
+    color: #ff4d4f;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.warningBox {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(255, 77, 79, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 77, 79, 0.3);
+    color: #ff7875;
+    text-align: center;
+}
+
+.deleteBtn {
+    background: #111; 
+    color: #ef4444;    
+    border: 1px solid #222;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  
+.deleteBtn:hover {
+    border-color: #ef4444; 
+}
+
+.disabledBtn {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+
+.actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+}

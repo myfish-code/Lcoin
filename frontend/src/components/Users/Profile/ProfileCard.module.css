@@ -1,0 +1,229 @@
+
+.ProfileContainer {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #1e1e1e;
+    border-radius: 16px;
+    border: 1px solid #333;
+    color: #e0e0e0;
+}
+
+.ProfileVerify {
+    display: flex;
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 20px;
+}
+
+.statusTitle {
+    color: #ccc;
+    margin: 0;
+    
+}
+
+.statusBadge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase; /* Делает статус более "официальным" */
+    letter-spacing: 0.5px;
+}
+
+/* Цвета для разных статусов */
+.unverified {
+    background-color: #444;
+    color: #bbb;
+}
+
+.pending {
+    background-color: rgba(255, 165, 0, 0.2); /* Оранжевый прозрачный */
+    color: #ffa500;
+    border: 1px solid rgba(255, 165, 0, 0.4);
+}
+
+.verified {
+    background-color: rgba(0, 255, 0, 0.1); /* Зеленый прозрачный */
+    color: #00ff00;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.rejected {
+    background-color: rgba(255, 0, 0, 0.1); /* Красный прозрачный */
+    color: #ff4d4f;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.pendingDescription {
+    font-size: 0.85rem; /* Чуть меньше основного текста */
+    color: #cca300;     /* Приглушенный желтый/золотой, цвет ожидания */
+    opacity: 0.8;
+    max-width: 250px;   /* Ограничиваем ширину, чтобы текст аккуратно переносился */
+    line-height: 1.2;
+}
+
+.rejectedDescription {
+    font-size: 0.85rem; 
+    color: #ff6b6b; /* Мягкий красный цвет для ошибки */
+    opacity: 0.9;   /* Чуть выше непрозрачность, чем у пендинга, для важности */
+    max-width: 280px;  
+    line-height: 1.3;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.ProfileInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    position: relative; 
+    padding-bottom: 10px;
+}
+
+.ProfileInfo h2 {
+    color: #fff;
+    font-size: 1.8rem;
+}
+
+.LangBtn {
+    background: #2b2b2c;
+    border: 1px solid #3d3d3e;
+    padding: 6px 15px;
+    border-radius: 8px;
+    color: #58a6ff; 
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    list-style: none; 
+}
+
+.LangBtn:hover {
+    background: #3d3d3e;
+    border-color: #58a6ff;
+}
+
+.LangOptionsView {
+    position: absolute;
+    top: 100%; 
+    right: 0;
+    background: #1e1e1f; 
+    border: 1px solid #3d3d3e;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+/* Стилизация самого селектора */
+.LangOptionsView select {
+    background: #2b2b2c;
+    color: #eee;
+    border: 1px solid #3d3d3e;
+    padding: 8px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+}
+
+.LangOptionsView button {
+    background: #58a6ff;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.LangOptionsView button:hover {
+    background: #4a90e2;
+}
+
+/* Контейнеры для инфо (сделаем их карточками) */
+.UserInfo, .CustomerEmpty {
+    background: #252525;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+    transition: transform 0.2s;
+}
+
+.UserInfo h4, .CustomerEmpty h4 {
+    margin: 0 0 10px 0;
+    color: #4dabf7; /* Голубой акцент */
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.UserInfo span {
+    display: block;
+    margin: 5px 0;
+    font-size: 1.1rem;
+    color: #ccc;
+}
+
+/* Стили для пустых состояний */
+.CustomerEmpty {
+    opacity: 0.7;
+    border-style: dashed; /* Пунктир подчеркивает, что контента нет */
+}
+
+.CustomerEmpty span {
+    color: #666;
+    font-style: italic;
+}
+
+/* Кнопка чата */
+.ChatBtn {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: #75db8b; /* Зеленая кнопка */
+    color: #121212;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ShowBtn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #3b3a3a;
+    color: #121212;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ShowBtn:hover {
+    background-color: #474646;
+}
+
+.ChatBtn:hover {
+    background: #81c784;
+}
+
+@media(max-width: 530px) {
+    .ProfileInfo h2 {
+        font-size: 1rem;
+    }
+}

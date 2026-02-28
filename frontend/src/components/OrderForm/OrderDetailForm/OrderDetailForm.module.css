@@ -1,0 +1,25 @@
+.OptionBtn {
+    margin-bottom: 13px;
+}
+
+.OrderDetailContainer {
+    
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Заголовок "Ставки" */
+.BidsTitle {
+    margin: 40px 0 20px 0; /* Большой отступ сверху, чтобы отделить от заказа */
+    color: #fff;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+/* Контейнер для списка ставок */
+.BidsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Чтобы ставки не слипались */
+}

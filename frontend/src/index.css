@@ -1,0 +1,112 @@
+:root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark; /* Оставим только темную, чтобы не прыгало */
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* СБРОС ДЛЯ ВСЕХ ЭЛЕМЕНТОВ */
+* {
+  box-sizing: border-box; /* Чтобы padding не раздувал блоки */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  width: 100%;        /* Растягиваем на всю ширину */
+  min-height: 100vh;
+  display: block;    /* УБРАЛИ flex и place-items */
+}
+
+#root {
+  width: 100%;       /* Гарантируем, что контейнер React на весь экран */
+  min-height: 100vh;
+}
+
+/* Ссылки и кнопки */
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: none;
+}
+
+a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #1a1a1a;
+  cursor: pointer;
+}
+
+.g-empty-view, .g-loading-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px; 
+  text-align: center;
+  color: #888;
+}
+
+.g-empty-icon, .g-loading-icon {
+  font-size: 50px; 
+  margin-bottom: 15px;
+  opacity: 0.4; 
+}
+
+.g-empty-view p,
+.g-loading-view p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ccc; 
+  margin: 0;
+}
+
+.g-empty-view h4,
+.g-loading-view h4 {
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+.g-loading-info {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  align-items: baseline
+}
+
+.dots span {
+  line-height: 0;
+  font-size: 32px;
+  animation: blink 1.4s infinite both;
+}
+
+.dots span:nth-child(2) { animation-delay: 0.2s; }
+.dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+

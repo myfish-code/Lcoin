@@ -1,0 +1,122 @@
+.Wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #1e1e1e;
+}
+
+.LoginForm {
+    background: #171717; 
+    padding: 3rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #262626; 
+}
+
+.LoginForm h2 {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+/* Новая обертка для каждого поля */
+.inputWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem; /* Отступ между блоками полей */
+}
+
+.LoginForm input {
+    width: 100%;
+    padding: 14px 16px;
+    padding-right: 45px; /* Резервируем место под счетчик */
+    background: #0a0a0a;
+    border: 1px solid #262626;
+    border-radius: 10px;
+    color: #efefef;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+}
+
+/* Тот самый счетчик */
+.inputWrapper span {
+    position: absolute;
+    right: 14px;
+    top: 17px; /* Центрируем по высоте инпута вручную */
+    font-size: 11px;
+    color: #555;
+    pointer-events: none;
+    user-select: none;
+}
+
+
+.inputWrapper button {
+    position: absolute;
+    background: transparent;
+    right: 5px;
+    top: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 0px;
+}
+
+.LoginForm input:focus {
+    outline: none;
+    border-color: #525252;
+    background: #111111;
+}
+
+.submitBtn {
+    margin-top: 1rem;
+    padding: 14px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submitBtn:hover {
+    background: #e5e5e5;
+}
+
+.ErrorView {
+    color: #ff4545;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    margin-left: 4px;
+}
+
+.AuthNavigation {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #64748b;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.AuthLink {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.AuthLink:hover {
+    color: #38bdf8;
+    text-decoration: underline;
+}

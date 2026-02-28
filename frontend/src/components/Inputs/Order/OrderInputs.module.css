@@ -1,0 +1,180 @@
+.OrderCreate {
+    background: #1a1a1b;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.OrderCreate h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.FormOrder {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative; /* Добавляем, чтобы span позиционировался относительно этой группы */
+}
+
+.inputGroup label {
+    font-size: 14px;
+    color: #999;
+    font-weight: 500;
+}
+
+.labelGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.labelGroup .smallLabel {
+    font-size: 10px;
+}
+.inputGroup input,
+.inputGroup textarea,
+.inputGroup select {
+    background: #2b2b2c;
+    border: 1px solid #3d3d3e;
+    border-radius: 8px;
+    padding: 12px;
+    /* Добавляем отступ справа, чтобы текст не заходил под цифры */
+    padding-right: 45px; 
+    color: #eee;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Стили для твоего счетчика */
+.inputGroup span {
+    position: absolute;
+    right: 12px;
+    bottom: 10px; /* Для инпута это будет нижний правый угол */
+    font-size: 11px;
+    color: #666;
+    pointer-events: none; /* Чтобы клик проходил сквозь цифры в инпут */
+    user-select: none;    /* Чтобы случайно не выделить цифры */
+}
+
+/* Корректировка для textarea, так как она обычно выше */
+.inputGroup textarea {
+    min-height: 80px;
+    padding-bottom: 25px; /* Резервируем место снизу для цифр */
+}
+
+.subjectsSelect {
+    width: 100%;
+    height: 46px;
+    padding: 0 12px;
+    
+    font-size: 16px; /* 16px важно, чтобы iPhone не зумил страницу при клике */
+    font-family: inherit;
+
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    
+    /* Оставляем стандартную стрелку, но даем ей дышать */
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .subjectsSelect:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px #2563eb;
+  }
+  
+  /* Чтобы текст внутри не прилипал к краям */
+  .subjectsSelect option {
+    padding: 10px;
+  }
+
+.FormOrder input:focus, 
+.FormOrder select:focus, 
+.FormOrder textarea:focus {
+    border-color: #58a6ff; /* Синий акцент при наборе */
+    background: #323233;
+}
+
+.FormOrder select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.FormOrder select option {
+    /* Пытаемся ограничить ширину внутри, 
+       хотя браузеры часто это игнорируют */
+    max-width: 100%; 
+    overflow: hidden;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+@media (min-width: 540px) {
+    .row {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+}
+.FormOrder textarea {
+    min-height: 100px;
+    resize: vertical; /* Разрешаем тянуть только вниз */
+}
+
+.submitBtn {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    margin-top: 10px;
+    background: #58a6ff;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.submitBtn:hover {
+    background: #4a90e2;
+}
+
+.submitBtn:active {
+    transform: scale(0.98);
+}
+
+.disabledBtn {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+
+.ErrorMessage {
+    color: #ff4d4d;         
+    background: #342222;     
+    border-left: 3px solid #ff4d4d; 
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.4;
+}

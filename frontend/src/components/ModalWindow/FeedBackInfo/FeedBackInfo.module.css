@@ -1,0 +1,150 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 11000;
+    backdrop-filter: blur(4px);
+
+}
+
+.modal {
+    background: #2a2a2a;
+    border: 1px solid #3d3d3d;
+    padding: 1.5rem; 
+    border-radius: 12px;
+    animation: fadeIn 0.2s ease-out;
+    max-width: 500px;
+    max-height: 90vh; 
+    overflow-y: auto; 
+    width: 95%;
+}
+.modal form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header span {
+    line-height: 1;
+    cursor: pointer;
+}
+
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative; 
+}
+
+.inputGroup textarea {
+    background:#3d3d3d;
+    border: 1px solid #3d3d3e;
+    border-radius: 8px;
+    padding: 12px;
+    padding-right: 45px; 
+    color: #eee;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 80px;
+    padding-bottom: 25px; 
+    resize: none;
+}
+
+.inputGroup span {
+    position: absolute;
+    right: 12px;
+    bottom: 10px; 
+    font-size: 11px;
+    color: #666;
+    pointer-events: none; 
+    user-select: none;    
+}
+
+.TextInfo {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.submitBtn {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    width: 100%;
+    background: #007bff; /* Твой синий или любой акцентный */
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 16px;
+    -webkit-tap-highlight-color: transparent; 
+}
+
+.submitBtn:hover {
+    background: #0069d9;
+}
+
+.submitBtn:active {
+    background: #0056b3;
+    transform: scale(0.98); 
+}
+
+.disabledBtn {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  
+.SuccessContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 10px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.CheckIcon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.ErrorMessage {
+    color: #ff4d4d;          
+    background: #342222;     
+    border-left: 3px solid #ff4d4d; 
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

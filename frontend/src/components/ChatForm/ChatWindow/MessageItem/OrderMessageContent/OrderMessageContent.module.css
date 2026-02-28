@@ -1,0 +1,378 @@
+.ReviewField {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed #e0e0e0;
+  /* Отделяем от инфы о заказе */
+}
+
+/* Общий стиль карточки отзыва */
+.Review {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #4a90e2;
+  /* Синяя полоска для красоты */
+  transition: transform 0.2s ease;
+}
+
+.Review:hover {
+  transform: translateX(5px);
+  /* Легкий интерактив */
+}
+
+/* Ссылка на автора отзыва */
+.Review span:first-child {
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+
+/* Оценка */
+.Review span:nth-child(2) {
+  font-size: 0.9rem;
+  color: #666;
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Текст отзыва */
+.Review p {
+  margin: 8px 0 0 0;
+  font-style: italic;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* Стиль для пустого состояния */
+.ReviewEmpty {
+  padding: 10px;
+  background: #fff5f5;
+  /* Легкий красноватый оттенок */
+  border: 1px solid #ffe3e3;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #999;
+  text-align: center;
+}
+
+.ReviewSection {
+  width: 100%;
+}
+.ReviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.inputGroup span {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  /* Для инпута это будет нижний правый угол */
+  font-size: 11px;
+  color: #666;
+  pointer-events: none;
+  /* Чтобы клик проходил сквозь цифры в инпут */
+  user-select: none;
+  /* Чтобы случайно не выделить цифры */
+}
+
+
+.inputGroup input,
+.inputGroup textarea {
+  background: #2b2b2c;
+  border: 1px solid #3d3d3e;
+  border-radius: 8px;
+  padding: 12px;
+  color: #eee;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+.inputGroup textarea {
+  padding-right: 45px;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  color: #999;
+  font-weight: 500;
+}
+.SendReviewBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  background: #58a6ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.SendReviewBtn:hover {
+  background: #4a90e2;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.Label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.icon {
+  font-size: 1.3rem;
+}
+
+/* Ссылка на ID заказа */
+.OrderMeta {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.OrderId {
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.OrderMeta a {
+  color: #4a90e2;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Текст уведомления (кто что отправил/принял) */
+.OrderInfo {
+  margin: 12px 0;
+  line-height: 1.5;
+  color: #34495e;
+  font-size: 0.95rem;
+  background: rgba(74, 144, 226, 0.05);
+  /* Легкий фон для акцента */
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* Блок с ценой и сроками (в ряд) */
+.FinalCondition {
+  display: flex;
+  flex-wrap: wrap;
+  /* Чтобы на мобилках переносилось */
+  gap: 15px;
+  margin-top: 10px;
+  padding: 10px;
+  background: #fdfdfd;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+}
+
+.Price,
+.Days {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #27ae60;
+  /* Зеленый для цены */
+  display: flex;
+  align-items: center;
+}
+
+.Days {
+  color: #e67e22;
+  /* Оранжевый для сроков */
+}
+
+/* Кнопка спора (если есть) */
+
+
+.TimeRemain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 193, 7, 0.1);
+  /* Мягкий желтый фон (предупреждение) */
+  border-radius: 8px;
+  color: #ffc107;
+  /* Золотистый цвет текста */
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* Если срок истек, можно менять цвет на красный через доп. класс */
+.TimeExpired {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.OptionBtns {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+
+}
+
+.acceptOfferBtn {
+  color: #1a7f45;
+  /* Более дорогой зеленый */
+  background-color: #f0fff4;
+  /* Едва заметный мятный фон */
+  border: 1px solid #c6f6d5;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acceptOfferBtn:hover {
+  color: white;
+  background-color: #27ae60;
+  /* Твой оригинальный зеленый на ховер */
+  border-color: #27ae60;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);
+}
+
+/* Кнопка Отклонить — Приглушенный кораллово-красный */
+.declineOfferBtn {
+  color: #d9534f;
+  /* Вместо оранжевого возьмем благородный красный */
+  background-color: #fff5f5;
+  /* Едва заметный розовый налет */
+  border: 1px solid #fed7d7;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.declineOfferBtn:hover {
+  color: white;
+  background-color: #d9534f;
+  border-color: #d9534f;
+  box-shadow: 0 2px 8px rgba(217, 83, 79, 0.2);
+}
+
+.confirmCompletedBtn {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #3498db;
+  /* Яркий синий */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.confirmCompletedBtn:hover {
+  background-color: #2980b9;
+  /* Темно-синий при наведении */
+}
+
+.disputeBtn {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #e74c3c;
+  padding: 0px 5px;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.disputeBtn:hover {
+  background-color: #c0392b;
+}
+
+.SectionReview {
+  display: flex;
+  gap: 8px;
+}
+
+.StartReviewBtn {
+  background-color: #6c5ce7;
+  /* Красивый фиолетовый или используй свой #3498db */
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.StartReviewBtn:hover {
+  background-color: #5849be;
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+}
+
+/* Кнопка "Отмена" — Нейтральная */
+.CancelReviewBtn {
+  background-color: #f1f2f6;
+  /* Светло-серый фон */
+  color: #57606f;
+  /* Спокойный серый текст */
+  border: 1px solid #a0a1a3;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.CancelReviewBtn:hover {
+  background-color: #dfe4ea;
+  /* Чуть темнее при наведении */
+  color: #2f3542;
+}
+
+.disabledBtn {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+.ErrorMessage {
+  color: #ff4d4d;
+  /* Тот же красный, что и у счетчика */
+  background: #342222;
+  /* Темно-красный приглушенный фон */
+  border-left: 3px solid #ff4d4d;
+  /* Акцентная полоска слева */
+  padding: 10px 15px;
+  font-size: 13px;
+  border-radius: 4px;
+  margin: 10px 0;
+  line-height: 1.4;
+}

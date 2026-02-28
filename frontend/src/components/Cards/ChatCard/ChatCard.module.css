@@ -1,0 +1,61 @@
+.ChatCard {
+    padding: 16px;
+    margin: 2px 12px; /* Добавляем отступы вокруг карточки, чтобы она "плавала" */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    
+    /* Скругления и фон */
+    border-radius: 16px; 
+    background-color: #1e1e1e; /* Темный фон карточки */
+    border: 1px solid #2d2d2d; /* Тонкая рамка, чтобы карточка не сливалась */
+    
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+}
+
+/* Эффект при наведении — делаем чуть светлее */
+.ChatCard:hover {
+    background-color: #2a2a2a;
+    transform: translateY(-2px); /* Легкий подъем при наведении */
+    border-color: #3f3f3f;
+}
+
+/* Активное состояние (при нажатии) */
+.ChatCard:active {
+    transform: scale(0.98);
+}
+
+.name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff; /* Белое имя */
+    letter-spacing: 0.3px;
+}
+
+.lastMessage {
+    display: flex;
+    align-items: center;
+}
+
+.lastMessage p {
+    margin: 0;
+    font-size: 14px;
+    color: #a0a0a0; /* Серый текст сообщения */
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mePrefix {
+    color: #4da3ff; /* Яркий акцент на "Вы:" */
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.empty {
+    color: #555 !important;
+    font-style: italic;
+}

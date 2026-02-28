@@ -1,0 +1,14 @@
+.OptionBtn {
+    margin-bottom: 20px;
+}
+
+.ErrorMessage {
+    color: #ff4d4d;          /* Тот же красный, что и у счетчика */
+    background: #342222;     /* Темно-красный приглушенный фон */
+    border-left: 3px solid #ff4d4d; /* Акцентная полоска слева */
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.4;
+}

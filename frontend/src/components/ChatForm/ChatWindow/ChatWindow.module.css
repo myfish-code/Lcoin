@@ -1,0 +1,98 @@
+/* Основной контейнер */
+.ChatWindow {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 255px); 
+    width: 100%; /* Занимает всю ширину родителя */
+    max-width: 800px; /* Ограничение для ПК */
+    margin: 0 auto; /* Центрируем на странице */
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.loadMoreWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.plainText {
+    font-size: 13px;
+    color: #888; /* Приглушенный серый */
+    margin-bottom: 6px;
+}
+
+.clickableLink {
+    color: #4da3ff; /* Приятный голубой для темной темы */
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(77, 163, 255, 0.1); /* Полупрозрачный фон */
+    transition: all 0.2s ease-in-out;
+    border: 1px solid rgba(77, 163, 255, 0.2);
+}
+
+.clickableLink:hover {
+    background: rgba(77, 163, 255, 0.2);
+    border-color: #4da3ff;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.clickableLink:active {
+    transform: translateY(0);
+    opacity: 0.8;
+}
+
+.totalCount {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #555; /* Еще более тусклый для второстепенной инфы */
+    letter-spacing: 0.5px;
+    text-transform: uppercase; /* Делает инфо-строку более строгой */
+}
+
+
+.Messages {
+    flex: 1; 
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Адаптивная форма отправки */
+
+
+/* --- АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (до 600px) --- */
+@media (max-width: 848px) {
+    .ChatWindow {
+        height: calc(100vh - 190px); /* На телефоне чат может быть на весь экран */
+        border-radius: 0; /* Убираем скругления на весь экран */
+        border: none;
+    }
+
+    .FormSend form {
+        gap: 8px;
+    }
+
+    /* Сообщения на телефоне могут быть шире (например, до 90%) */
+    :global(.MessageItem) {
+        max-width: 90% !important;
+    }
+
+    .ButtonSend button {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}

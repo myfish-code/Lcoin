@@ -3,16 +3,19 @@ version: '3.8'
 services:
   db:
     image: postgres:15
+    env_file:
+      - .env
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    
 
   backend:
     build: ./backend
-    command: gunicorn Lcoin.wsgi:application --bind 0.0.0.0:8000 --workers 3 --access-logfile - 
+    command: gunicorn Lcoin.wsgi:application --bind 0.0.0.0:8000 --workers 9 --access-logfile - 
     volumes:
       - ./backend:/app
       - ./media_data:/app/media

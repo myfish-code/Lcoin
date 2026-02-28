@@ -20,6 +20,8 @@ services:
       - SECRET_KEY=${DJANGO_SECRET_KEY}
       - DEBUG=${DJANGO_DEBUG}
       - DATABASE_URL=${DATABASE_URL} 
+      - FRONTEND_URL=${FRONTEND_URL} 
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     depends_on:
       - db
       

@@ -57,7 +57,7 @@ export default function OrderInfo({ order, isAuthor, onDeleteOrder }) {
                         <div className={styles.fileGroup}>
                             <span>📎</span>
                             <a
-                                href={order.order_file}
+                                href={order.order_file.replace("http://", "https://")}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 download

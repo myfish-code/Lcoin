@@ -15,9 +15,9 @@ export default function Login() {
         }
     }, [navigate])
 
-    const handleLogin = async ({loginValue, passwordValue}) => {
+    const handleLogin = async ({loginValue, passwordValue, language}) => {
 
-        const data = await login(loginValue, passwordValue);
+        const data = await login(loginValue, passwordValue, language);
         
         if (data.error) {
             return data.error

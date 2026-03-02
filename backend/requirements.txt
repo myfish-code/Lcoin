@@ -9,3 +9,5 @@ gunicorn
 whitenoise
 django-cleanup
 environ
+pylint
+pylint-django

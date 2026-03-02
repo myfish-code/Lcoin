@@ -187,10 +187,10 @@ export default function OrderMessageContent({ isMe, messageType, message, onSubm
 
     const reviews = message.review_data;
     const myReview = reviews.my_review;
-    const opponentReview = reviews.opponent_review;
+    const opponentReview = reviews.partner_review;
 
     const isExpired = Date.parse(order.expectedFinish) <= Date.parse(new Date());
-
+    
     const handleAcceptOffer = async (orderId, messageId) => {
         setIsLoadingAccept(true);
         await onAcceptOffer(orderId, messageId)

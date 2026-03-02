@@ -7,10 +7,11 @@ import LanguageBar from "../../components/LanguageBar/LanguageBar";
 
 export default function Home() {
     const { t } = useTranslation();
+    let lang = localStorage.getItem("language") || "sk";
 
     return (
         <div className={styles.HomeContainer}>
-            <LanguageBar />
+            <LanguageBar lang={lang}/>
             
             <div className={styles.header}>
                 <h1>{t('home.header')}</h1>

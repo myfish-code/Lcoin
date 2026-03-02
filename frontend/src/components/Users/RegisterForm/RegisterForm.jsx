@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import LanguageBar from "../../LanguageBar/LanguageBar";
 
 export default function RegisterForm({ onSubmit }) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [showPassword1, setShowPassword1] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
@@ -24,6 +24,8 @@ export default function RegisterForm({ onSubmit }) {
         email: null,
         submitBtn: null
     });
+
+    let lang = localStorage.getItem("language") || "sk";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -66,7 +68,7 @@ export default function RegisterForm({ onSubmit }) {
             return;
         }
 
-        const dataError = await onSubmit({ loginValue, passwordValue, password2Value, emailValue });
+        const dataError = await onSubmit({ loginValue, passwordValue, password2Value, emailValue, language: lang });
 
         if (dataError) {
             setError(prev => ({ ...prev, submitBtn: t(`error_message.${dataError}`) }))
@@ -92,7 +94,7 @@ export default function RegisterForm({ onSubmit }) {
         <div className={styles.Wrapper}>
 
             <form className={styles.RegisterForm} onSubmit={handleSubmit}>
-                <LanguageBar />
+                <LanguageBar lang={lang}/>
                 <h2>{t('register.text_general')}</h2>
 
                 <div className={styles.inputWrapper}>

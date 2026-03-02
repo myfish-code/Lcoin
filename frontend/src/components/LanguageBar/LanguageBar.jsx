@@ -1,19 +1,20 @@
 import styles from "./LanguageBar.module.css"
 
 import { useTranslation } from "react-i18next"
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 import enSvg from "../../assets/icons/flags/en.svg";
 import ruSvg from "../../assets/icons/flags/ru.svg";
 import ukSvg from "../../assets/icons/flags/uk.svg";
 import skSvg from "../../assets/icons/flags/sk.svg";
 
-export default function LanguageBar() {
+export default function LanguageBar({lang="sk"}) {
     const { i18n } = useTranslation();
 
-    const [currentLang, setCurrentLang] = useState('sk');
+    const [currentLang, setCurrentLang] = useState(lang);
 
     const handleChangeLanguage = (lang_change) => {
+        localStorage.setItem("language", lang_change)
         i18n.changeLanguage(lang_change);
         setCurrentLang(lang_change);
     }

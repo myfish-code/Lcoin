@@ -11,6 +11,10 @@ export async function getProfile(user_id, currentRole, currentPage, SIZE) {
     return await privateGet(`${API_URL}profile/${user_id}/${currentRole}/?${params}`);
 }
 
+export async function getLanguage() {
+    return await privateGet(`${API_URL}change-language/`);
+}
+
 export async function changeLanguage(langChange) {
     return await privatePatch(`${API_URL}change-language/${langChange}/`);
 }

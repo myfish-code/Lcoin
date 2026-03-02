@@ -1,10 +1,11 @@
 import { useNavigate, Link, Outlet, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import { useTranslation } from "react-i18next";
 
 import styles from "./MainLayout.module.css"
 import ActionConfirm from "../../ModalWindow/ActionConfirm/ActionConfirm";
 import FeedBackInfo from "../../ModalWindow/FeedBackInfo/FeedBackInfo";
+import { getLanguage } from "../../../api/users";
 
 export default function MainLayout() {
     const navigate = useNavigate();
@@ -16,7 +17,9 @@ export default function MainLayout() {
     const user = localStorage.getItem("user");
 
     if (!access || !user) {
-        localStorage.clear();
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("user");
         return <Navigate to="/login" replace />
     }
 
@@ -24,20 +27,21 @@ export default function MainLayout() {
     const closeMenu = (() => setIsMenuOpen(false));
 
     const handleLogout = () => {
-        localStorage.clear();
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("user");
         navigate("/login");
     }
 
     useEffect(() => {
-        if (user) {
-            try {
-                const userData = JSON.parse(user);
-                i18n.changeLanguage(userData.language || "sk");
-            } catch (e) {
-                handleLogout();
-            }
-        } else {
+        if (!user || !access) {
             handleLogout();
+        } else {
+            getLanguage().then((data) => {
+                const language = data.language
+                localStorage.setItem("language", language)
+                i18n.changeLanguage(language);
+            })
         }
     }, []);
 
@@ -71,14 +75,14 @@ export default function MainLayout() {
                     <FeedBackInfo
                         buttonText={`💬 ${t('feedback.support')}`}
                         buttonClass={styles.navFeedBackButton} />
-                        
+
                     <ActionConfirm
                         labelName={`🚪 ${t('mainlayout.logout')}`}
                         confirmMessage={t('mainlayout.confirm_logout')}
                         buttonClass={styles.LogoutBtn}
                         onConfirm={handleLogout}
                     />
-                    
+
                 </nav>
 
             </header>

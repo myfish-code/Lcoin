@@ -87,7 +87,8 @@
         "author": "Author",
         "bids": "Bids",
         "you": "You",
-        "selected": "Selected"
+        "selected": "Selected",
+        "admin": "Admin"
     },
     "bids": {
         "status_pending": "Pending",
@@ -322,6 +323,7 @@
         "page_not_found": "Oops! Page not found.",
         "page_not_found_desc": "It looks like we can't find what you're looking for. The address might have been changed or the page was deleted.",
         "go_back": "Go back",
-        "UNKNOWN_ERROR": "Unknown error"
+        "UNKNOWN_ERROR": "Unknown error",
+        "Failed to fetch": "Failed to fetch"
     }
 }

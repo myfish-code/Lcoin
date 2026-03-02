@@ -16,8 +16,8 @@ i18n
       en: { translation: enTranslation},
       uk: { translation: ukTranslation}
     },
-    lng: 'sk', // язык по умолчанию
-    fallbackLng: 'sk', // если перевод не найден
+    lng: localStorage.getItem("language") || 'sk', 
+    fallbackLng: 'sk', 
     interpolation: { escapeValue: false }
   });
 

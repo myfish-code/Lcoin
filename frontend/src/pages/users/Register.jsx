@@ -16,9 +16,9 @@ export default function Register() {
         }
     }, [navigate])
 
-    const handleSubmit = async ({loginValue, passwordValue, password2Value, emailValue}) => {
+    const handleSubmit = async ({loginValue, passwordValue, password2Value, emailValue, language}) => {
         
-        const data = await register(loginValue, passwordValue, password2Value, emailValue);
+        const data = await register(loginValue, passwordValue, password2Value, emailValue, language);
 
         if (data.error) {
             return data.error

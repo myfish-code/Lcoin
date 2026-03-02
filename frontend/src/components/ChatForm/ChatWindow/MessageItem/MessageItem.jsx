@@ -55,9 +55,13 @@ export default function MessageItem({message, currentUserId, isMenuConfig, onOpe
             )}
             
             <div className={styles.MessageContent}>
-                
                 <div className={`${styles.TextContent} ${styles[messageType] || ''}`} 
                         onClick={(e) => isConditionMessage && onOpenMenu(e)}>
+                    {isAdmin && (
+                        <div className={styles.adminFrame}>
+                            {t('general.admin')}
+                        </div>
+                    )}
                     {isOrderMessage ? (
                         <OrderMessageContent 
                             isMe={isMe} 

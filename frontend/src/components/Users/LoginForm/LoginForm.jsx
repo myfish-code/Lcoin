@@ -9,7 +9,7 @@ import LanguageBar from "../../LanguageBar/LanguageBar";
 
 export default function LoginForm({ onSubmit }) {
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -21,6 +21,8 @@ export default function LoginForm({ onSubmit }) {
         password: null,
         submitBtn: null
     });
+
+    let lang = localStorage.getItem("language") || "sk";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,7 +52,7 @@ export default function LoginForm({ onSubmit }) {
             return;
         }
 
-        const dataError = await onSubmit({ loginValue, passwordValue });
+        const dataError = await onSubmit({ loginValue, passwordValue, language: lang });
 
         if (dataError) {
             setError(prev => ({
@@ -73,7 +75,7 @@ export default function LoginForm({ onSubmit }) {
     return (
         <div className={styles.Wrapper}>
             <form className={styles.LoginForm} onSubmit={handleSubmit}>
-                <LanguageBar />
+                <LanguageBar lang={lang}/>
                 <h2>{t('login.text_general')}</h2>
 
                 <div className={styles.inputWrapper}>

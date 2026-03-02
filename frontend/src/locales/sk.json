@@ -87,7 +87,8 @@
         "author": "Autor",
         "bids": "Ponuky",
         "you": "Vy",
-        "selected": "Vybraný"
+        "selected": "Vybraný",
+        "admin": "Admin"
     },
     "bids": {
         "status_pending": "Čakajúce",
@@ -323,6 +324,7 @@
         "page_not_found": "Ups! Stránka sa nenašla.",
         "page_not_found_desc": "Zdá sa, že nemôžeme nájsť to, čo hľadáte. Možno bola adresa zmenená alebo stránka odstránená.",
         "go_back": "Vrátiť sa späť",
-        "UNKNOWN_ERROR": "Neznáma chyba"
+        "UNKNOWN_ERROR": "Neznáma chyba",
+        "Failed to fetch": "Chyba pri načítaní dát"
     }
 }

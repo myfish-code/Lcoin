@@ -59,7 +59,7 @@ export default function Profile() {
 
         try {
             const data = await createChat(userId);
-            
+
             navigate(`/chats/${data.chatId}`);
 
         } catch (error) {
@@ -81,7 +81,7 @@ export default function Profile() {
             const data = await changeLanguage(langChange);
             await i18n.changeLanguage(langChange);
             setUser(data.user);
-            localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("language", langChange)
             setErrorData(null);
 
         } catch (error) {
@@ -122,11 +122,13 @@ export default function Profile() {
 
     useEffect(() => {
         if (!myId) {
-            localStorage.clear();
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            localStorage.removeItem("user");
             navigate("/login");
             return;
         }
-        
+
         if (!/^\d+$/.test(userId) && userId !== "me") {
             setErrorData({ type: "NOT_FOUND" });
             setIsLoading(false);

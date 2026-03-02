@@ -37,7 +37,8 @@ class Message(models.Model):
     text = models.TextField()
 
     type = models.CharField(max_length=20,
-                                    choices=[('text', 'Обычное сообщение'),
+                                    choices=[('admin', 'Сообщения администрации'),
+                                              ('text', 'Обычное сообщение'),
                                               ('offer', 'Офер'),
                                               ('offer_accepted', 'Офер - принят'),
                                               ('offer_declined', "Офер - отклонен"),

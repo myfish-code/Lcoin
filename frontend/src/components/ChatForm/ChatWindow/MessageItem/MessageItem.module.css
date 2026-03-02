@@ -30,6 +30,16 @@
     padding-left: 4px;
 }
 
+.adminFrame {
+    border: 1px solid #c25200; 
+    color: #c25200; 
+    padding: 0px 5px;
+    padding-bottom: 3px;
+    border-radius: 10px;
+    max-width: fit-content;
+    margin: 5px 0;
+}
+
 .Date {
     font-size: 10px;
     opacity: 0.6;

@@ -20,7 +20,7 @@ export default function ProfileCard({ error, user, isOwner, orders, onCreateChat
 
     const isExecutor = currentRole === "executor"
     const user_statistic = isExecutor ? user.executor_info : user.customer_info;
-    const language = user?.language || "sk"
+    const language = localStorage.getItem("language") || "sk"
     const verificationStatus = user.verification_status;
     const verifyRejectReason = user.verification_rejected_reason || t('verify.rejected_text_default');
 
@@ -114,13 +114,20 @@ export default function ProfileCard({ error, user, isOwner, orders, onCreateChat
             {user_statistic.total_reviews > 0 ? (
                 <div className={styles.UserInfo}>
                     <h4>{isExecutor ? t('profile.role_executor') : t('profile.role_customer')}</h4>
-                    <span>⭐ {user_statistic.rating} - {t('profile.average_rating')}</span>
-                    <span>🚚 {user_statistic.total_reviews} - {t('profile.number_of_works')}</span>
+                    <span className={styles.info}>⭐ {user_statistic.rating} - {t('profile.average_rating')}</span>
+                    <span className={styles.info}>🚚 {user_statistic.total_reviews} - {t('profile.number_of_works')}</span>
 
                     <button
-                        className={styles.ShowBtn}
+                        className={`${styles.ShowBtn} ${isLoading && styles.disabledBtn}`}
                         onClick={() => setShowProjects(!showProjects)}>
-                        {showProjects ? t('profile.hide_work') : t('profile.show_work')}
+                        {isLoading ? (
+                            <div className="g-loading-info">
+                                <p>{t('load.works')}</p>
+                                <span className="dots">
+                                    <span>.</span><span>.</span><span>.</span>
+                                </span>
+                            </div>
+                        ) : showProjects ? t('profile.hide_work') : t('profile.show_work')}
                     </button>
                 </div>
             ) : (

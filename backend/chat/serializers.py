@@ -65,13 +65,13 @@ class MessageSerializer(serializers.ModelSerializer):
     
     def get_review_data(self, obj):
         if not obj.order:
-            return None
+            return {"my_review": None, "partner_review": None}
 
         request = self.context.get('request')
         if not request or not request.user:
-            return None
+            return {"my_review": None, "partner_review": None}
         
-        reviews = obj.order.reviews.all()
+        reviews = OrderReview.objects.filter(order=obj.order)
         
         res = {"my_review": None, "partner_review": None}
 
@@ -80,7 +80,7 @@ class MessageSerializer(serializers.ModelSerializer):
                 res["my_review"] = {"grade": review.grade, "text": review.text}
             else:
                 res["partner_review"] = {"grade": review.grade, "text": review.text}
-            
+
         return res
 
         

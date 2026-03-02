@@ -21,7 +21,8 @@ class LoginAPIView(APIView):
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
-    
+        language = request.data.get("language")
+
         if (not username or not password):
             return Response({"error": "no_all_data"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -30,6 +31,9 @@ class LoginAPIView(APIView):
         if user is None:
             return Response({"error": "incorrect_data"}, status=status.HTTP_400_BAD_REQUEST)
         
+        if language:
+            user.language = language
+            user.save(update_fields=["language"])
         refresh = RefreshToken.for_user(user)
 
 
@@ -46,7 +50,9 @@ class RegisterAPIView(APIView):
         password2 = request.data.get("password2")
 
         email = request.data.get("email")
-        
+        language = request.data.get("language")
+        if not language:
+            language = "sk" 
         if (not username or not password or not password2 or not email):
             return Response({"error": "no_all_data"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -64,7 +70,8 @@ class RegisterAPIView(APIView):
                 user = Client.objects.create_user(
                     username=username,
                     password=password,
-                    email=email
+                    email=email,
+                    language=language
                 )
 
                 refresh = RefreshToken.for_user(user)
@@ -142,6 +149,12 @@ class ProfileAPIView(APIView):
 class LanguageAPIView(APIView):
     permission_classes=[IsAuthenticated]
 
+    def get(self, request): 
+        user = request.user
+
+        return Response({
+            "language": user.language
+        }, status=status.HTTP_200_OK)
     
     def patch(self, request, lang):
         lang_lists = ["uk", "ru", "sk", "en"]

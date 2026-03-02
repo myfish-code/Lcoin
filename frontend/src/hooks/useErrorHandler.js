@@ -9,13 +9,14 @@ export const useErrorHandler = () => {
     const handleError = (error) => {
 
         if (error.status === 401) {
-            localStorage.clear();
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
             navigate("/login")
             return { type: 'REDIRECT' };
         }
 
         if (error.status === 404) {
-            return { type: 'NOT_FOUND', message: t('error_message.NOT_FOUND')};
+            return { type: 'NOT_FOUND', message: t('error_message.NOT_FOUND') };
         }
 
         return {

@@ -81,7 +81,7 @@ export default function OrderInfo({ order, isAuthor, onDeleteOrder }) {
                 <div className={styles.detailsGrid}>
                     <div className={styles.infoItem}>
                         <label>{t('orders.subject')}:</label>
-                        <span>{order.subject}</span>
+                        <span>{t(`subject.${order.subject}`)}</span>
                     </div>
 
                     <div className={styles.infoItem}>

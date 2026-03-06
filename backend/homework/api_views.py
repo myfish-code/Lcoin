@@ -122,6 +122,7 @@ class SearchOrderDetailAPIView(APIView):
         order = get_object_or_404(HomeworkOrder.objects.select_related('author', 'executor').prefetch_related('reviews'), id=order_id)
 
         priority_status = Case(
+            #When(id=order.selected_bid.id, then=0),
             When(author__verification_status="verified", then=1),
             When(author__verification_status="pending", then=2),
             When(author__verification_status="unverified", then=3),
@@ -143,8 +144,16 @@ class SearchOrderDetailAPIView(APIView):
 
         serializer_bids = ResponseBidSerializer(bids, many=True)
 
+        message_order = Message.objects.filter(
+            order=order
+        ).first()
+        chat = message_order.chat.id if message_order else None
+
+        order_data = HomeworkOrderSerializer(order, context={'request': request}).data
+        order_data['chatId'] = chat
+                        
         return Response({
-            "order": HomeworkOrderSerializer(order, context={'request': request}).data,
+            "order": order_data,
             "bids": serializer_bids.data,
             "is_author": is_author,
             "user_bid_id": user_bid.id if user_bid else None,
@@ -205,11 +214,14 @@ class OrderAssignmentAPIView(APIView):
 
                 chat.last_message = message
                 chat.save(update_fields=['last_message'])
-        
-        
+
+                order_data = HomeworkOrderSerializer(order).data
+                order_data['chatId'] = chat.id
+                        
                 return Response({
-                    "order": HomeworkOrderSerializer(order).data 
+                    "order": order_data
                 }, status=status.HTTP_200_OK)
+            
         except Exception as e:
             return Response({
                 "error": "assignment_post"
@@ -871,7 +883,7 @@ class MyBidsAPIView(APIView):
 
         order = bid.order
 
-        if order.status not in ("open", "pending"):
+        if order.status != "open":
             return Response({
                 "error": "order_already_has_candidate"
             }, status=status.HTTP_403_FORBIDDEN)

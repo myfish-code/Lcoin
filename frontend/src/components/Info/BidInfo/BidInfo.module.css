@@ -8,6 +8,8 @@
 
 .selected { border-color: #75db8b;}
 
+.offerSend { border-color: #00ffc2;}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -61,13 +63,21 @@
     text-decoration: none;
 }
 
-.ExecutorBadge {
-    background: rgba(117, 219, 139, 0.2);
-    color: #75db8b;
+.ExecutorBadge, .SelectedBidBadge {
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 4px;
     width: fit-content;
+}
+
+.ExecutorBadge {
+    background: rgba(117, 219, 139, 0.2);
+    color: #75db8b;
+}
+
+.SelectedBidBadge {
+    background: rgba(0, 255, 194, 0.15); 
+    color: #00ffc2;
 }
 
 .bidMetrics {
@@ -195,12 +205,19 @@
     background: rgba(255, 75, 75, 0.05); /* Легкий красный налет */
 }
 
-/* Кнопка Отклонить */
+.orderBlock {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
 .DeclineOffer {
     background: transparent;
-    color: #ff4d4d; /* Яркий, но тонкий красный */
+    color: #ff4d4d; 
     border: 1px solid rgba(255, 77, 77, 0.3);
-    padding: 6px 14px;
+    padding: 10px 14px;
+    line-height: 1;
     border-radius: 4px;
     font-size: 13px;
     cursor: pointer;
@@ -211,6 +228,29 @@
     background: #ff4d4d;
     color: #fff;
 }
+
+.chatButton {
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    line-height: 1;
+    background: transparent;
+    color: #4da6ff;
+    border: 1px solid rgba(77, 166, 255, 0.3);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chatButton:hover {
+    background: #4da6ff;    
+    color: #ffffff;       
+    border-color: #4da6ff; 
+}
+
 .inputRow {
     display: flex;
     gap: 10px;

@@ -1,0 +1,73 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal {
+    background: #2a2a2a;
+    border: 1px solid #3d3d3d;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 1000px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header span {
+    line-height: 1;
+    cursor: pointer;
+}
+
+
+.buttonFAQ {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 2px solid rgba(77, 166, 255, 0.25); 
+    color: rgba(77, 166, 255, 0.8);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+}
+
+.buttonFAQ:hover {
+    background: rgba(77, 166, 255, 0.05); 
+    color: #4da6ff;
+    border-color: rgba(77, 166, 255, 0.5);
+}
+
+.buttonFAQ:active {
+    opacity: 0.7;
+    background: transparent;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

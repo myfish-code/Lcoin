@@ -1,15 +1,15 @@
 {
     "home": {
         "header": "Lcoin: Slobodná platforma pre študentov",
-        "header_text": "Uverejňuj zadania alebo pomáhaj ostatným. Bez provízií a sprostredkovateľov.",
-        "login": "Prihlásiť",
+        "header_text": "Platforma pre študentov, kde nájdete pomoc so štúdiom alebo zarobíte na svojich vedomostiach. Žiadni sprostredkovatelia ani provízie — dohodnete sa priamo.",
+        "login": "Prihlásiť sa",
         "register": "Registrácia",
-        "subject_1": "1. Zverejni inzerát",
-        "text_1": "Popíš, čo potrebuješ urobiť, a čakaj na ponuky.",
-        "subject_2": "2. Dohodni si detaily",
-        "text_2": "Využi integrovaný chat a dohodni sa na podmienkach a cene.",
-        "subject_3": "3. Získaj výsledok",
-        "text_3": "Uzavri dohodu priamo s vybraným človekom."
+        "subject_1": "1. Pridaj inzerát",
+        "text_1": "Prejdi do sekcie „Moje zákazky“, zadaj predmet, termín a svoju cenu.",
+        "subject_2": "2. Nájdi zákazku",
+        "text_2": "Použi filtre v „Hľadaní zákaziek“ a vyber si vhodnú úlohu.",
+        "subject_3": "3. Komunikuj priamo",
+        "text_3": "Dohodni si detaily a podmienky priamo v sekcii „Správy“."
     },
     "login": {
         "text_general": "Prihlásenie",
@@ -87,7 +87,8 @@
         "author": "Autor",
         "bids": "Ponuky",
         "you": "Vy",
-        "selected": "Vybraný",
+        "selected": "Schválený",
+        "offer_send": "Vybraný kandidát",
         "admin": "Admin"
     },
     "bids": {
@@ -176,7 +177,10 @@
         "id_message": "ID zákazky",
         "file_received": "Priložený súbor",
         "file_upload": "Súbor (voliteľné)",
-        "file_size_limit": "Maximálna veľkosť: 10 MB"
+        "file_size_limit": "Maximálna veľkosť: 10 MB",
+        "chat_with": "Chat s",
+        "with_executor": "riešiteľom",
+        "with_customer": "zákazníkom"
     },
     "search_orders": {
         "empty_orders": "Zatiaľ žiadne zákazky",

@@ -64,26 +64,28 @@ export default function MainLayout() {
 
                 </div>
 
-                <nav className={`${styles.Nav} ${isMenuOpen ? styles.NavOpen : ""}`}>
-                    <Link to={`/search?page=1`} className={styles.MenuBtn} onClick={closeMenu}>🔎{t('mainlayout.search_orders')}</Link>
-                    <Link to={`/chats`} className={styles.MenuBtn} onClick={closeMenu}>💬{t('mainlayout.messages')}</Link>
-                    <Link to={`/myOrders?page=1&status=open`} className={styles.MenuBtn} onClick={closeMenu}>📝{t('mainlayout.my_orders')}</Link>
-                    <Link to={`/myBids?page=1&status=pending`} className={styles.MenuBtn} onClick={closeMenu}>🏇{t('mainlayout.my_bids')}</Link>
-                    <Link to={`/myDisputes?page=1&status=open`} className={styles.MenuBtn} onClick={closeMenu}>😡{t('mainlayout.my_disputes')}</Link>
-                    <Link to="/profile/me?page=1&role=executor" className={styles.MenuBtn} onClick={closeMenu}>🪪{t('mainlayout.profile')}</Link>
+                <div className={`${isMenuOpen ? styles.overlay : ''}`} onClick={() => setIsMenuOpen(false)}>
+                    <nav className={`${styles.Nav} ${isMenuOpen ? styles.NavOpen : ""}`} onClick={(e) => e.stopPropagation()}>
+                        <Link to={`/search?page=1`} className={styles.MenuBtn} onClick={closeMenu}>🔎{t('mainlayout.search_orders')}</Link>
+                        <Link to={`/chats`} className={styles.MenuBtn} onClick={closeMenu}>💬{t('mainlayout.messages')}</Link>
+                        <Link to={`/myOrders?page=1&status=open`} className={styles.MenuBtn} onClick={closeMenu}>📝{t('mainlayout.my_orders')}</Link>
+                        <Link to={`/myBids?page=1&status=pending`} className={styles.MenuBtn} onClick={closeMenu}>🏇{t('mainlayout.my_bids')}</Link>
+                        <Link to={`/myDisputes?page=1&status=open`} className={styles.MenuBtn} onClick={closeMenu}>😡{t('mainlayout.my_disputes')}</Link>
+                        <Link to="/profile/me?page=1&role=executor" className={styles.MenuBtn} onClick={closeMenu}>🪪{t('mainlayout.profile')}</Link>
 
-                    <FeedBackInfo
-                        buttonText={`💬 ${t('feedback.support')}`}
-                        buttonClass={styles.navFeedBackButton} />
+                        <FeedBackInfo
+                            buttonText={`💬 ${t('feedback.support')}`}
+                            buttonClass={styles.navFeedBackButton} />
 
-                    <ActionConfirm
-                        labelName={`🚪 ${t('mainlayout.logout')}`}
-                        confirmMessage={t('mainlayout.confirm_logout')}
-                        buttonClass={styles.LogoutBtn}
-                        onConfirm={handleLogout}
-                    />
+                        <ActionConfirm
+                            labelName={`🚪 ${t('mainlayout.logout')}`}
+                            confirmMessage={t('mainlayout.confirm_logout')}
+                            buttonClass={styles.LogoutBtn}
+                            onConfirm={handleLogout}
+                        />
 
-                </nav>
+                    </nav>
+                </div>
 
             </header>
 

@@ -1,15 +1,15 @@
 {
     "home": {
         "header": "Lcoin: A Free Platform for Students",
-        "header_text": "Post assignments or help others. No commissions or intermediaries.",
+        "header_text": "A platform for students to find study help or earn from your knowledge. No middleman, no commissions — you deal directly with each other.",
         "login": "Login",
-        "register": "Registration",
+        "register": "Register",
         "subject_1": "1. Post an ad",
-        "text_1": "Describe what you need to be done and wait for offers.",
-        "subject_2": "2. Discuss details",
-        "text_2": "Use the built-in chat to agree on terms and price.",
-        "subject_3": "3. Get results",
-        "text_3": "Close the deal directly with the person you choose."
+        "text_1": "Go to 'My Orders', specify the subject, deadline, and your price.",
+        "subject_2": "2. Find an order",
+        "text_2": "Use filters in 'Search Orders' to pick the right task for you.",
+        "subject_3": "3. Chat directly",
+        "text_3": "Discuss details and make a deal right in the 'Messages' section."
     },
     "login": {
         "text_general": "Login",
@@ -87,7 +87,8 @@
         "author": "Author",
         "bids": "Bids",
         "you": "You",
-        "selected": "Selected",
+        "selected": "Executor approved",
+        "offer_send": "Candidate selected",
         "admin": "Admin"
     },
     "bids": {
@@ -175,7 +176,10 @@
         "id_message": "Order ID",
         "file_received": "Attached file",
         "file_upload": "File (optional)",
-        "file_size_limit": "Maximum size: 10 MB"
+        "file_size_limit": "Maximum size: 10 MB",
+        "chat_with": "Chat with",
+        "with_executor": "executor",
+        "with_customer": "customer"
     },
     "search_orders": {
         "empty_orders": "No orders yet",

@@ -109,7 +109,7 @@ export default function OrderInfo({ order, isAuthor, onDeleteOrder }) {
             {
                 isAuthor && (
                     <div className={styles.actions}>
-                        {(order.status === "open" || order.status === "pending") ? (
+                        {(order.status === "open") ? (
                             <ActionConfirm
                                 labelName={isLoadingDel ? (
                                     <div className="g-loading-info">

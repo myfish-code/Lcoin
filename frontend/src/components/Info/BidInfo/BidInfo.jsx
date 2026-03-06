@@ -20,7 +20,7 @@ export default function BidInfo({
     const [isLoadingUnAssignExec, setIsLoadingUnAssignExec] = useState(false);
 
     const conditionLoading = isLoadingAssignExec || isLoadingUnAssignExec;
-    
+
     const [confirmingBidId, setConfirmingBidId] = useState(null);
     const [finalPrice, setFinalPrice] = useState("");
     const [finalDays, setFinalDays] = useState("");
@@ -67,19 +67,20 @@ export default function BidInfo({
         setIsLoadingAssignExec(true);
         await onAssignExecutor(bidId, finalPrice, finalDays);
 
-        
+
         setConfirmingBidId(null);
         setFinalPrice(order.price);
         setFinalDays(1);
         setError(null);
-        
+
 
         setIsLoadingAssignExec(false);
     }
 
     return (
 
-        <div className={`${styles.BidContainer} ${order.executor === author.id ? styles.selected : ''}`}>
+        <div className={`${styles.BidContainer} ${order.executor === author.id ? styles.selected : order.selected_bid === bid.id ? styles.offerSend : ''
+            }`}>
             <div className={styles.header}>
                 <div className={styles.userInfo}>
                     <span className={`${styles.statusBadge} ${styles[verificationStatus]}`}>
@@ -91,6 +92,9 @@ export default function BidInfo({
 
                     {order.executor?.id === author.id && (
                         <span className={styles.ExecutorBadge}>{t('general.selected')}</span>
+                    )}
+                    {order.selected_bid === bid.id && (
+                        <span className={styles.SelectedBidBadge}>{t('general.offer_send')}</span>
                     )}
                 </div>
 
@@ -111,29 +115,6 @@ export default function BidInfo({
             </div>
 
             <div className={styles.actions}>
-                {userBidId === bidId && (
-                    <div className={styles.deleteZone}>
-                        {(orderStatus === "open" || orderStatus === "pending") ? (
-                            <ActionConfirm
-                                labelName={isLoadingDelBid ? (
-                                <div className="g-loading-info">
-                                    <p>{t('load.delete')}</p>
-                                    <span className="dots">
-                                        <span>.</span><span>.</span><span>.</span>
-                                    </span>
-                                </div>
-                            ) : t('general.delete')}
-                                confirmMessage={t('bids.confirm_delete')}
-                                buttonClass={`${styles.deleteBtn} ${isLoadingDelBid && styles.disabledBtn}`}
-                                onConfirm={() => handleDeleteBid(bidId)}
-                            />
-                        ) : (
-                            <p className={styles.lockText}>{t('error_message.order_approved_bid')}</p>
-                        )}
-                    </div>
-
-                )}
-
                 {isAuthor && orderStatus === "open" && (
                     <div className={styles.assignZone}>
                         {confirmingBidId === null ? (
@@ -165,7 +146,7 @@ export default function BidInfo({
 
                                     <div className={styles.formButtons}>
                                         <ActionConfirm
-                                            buttonClass={`${styles.ConfirmOffer } ${isLoadingAssignExec && styles.disabledBtn}`}
+                                            buttonClass={`${styles.ConfirmOffer} ${isLoadingAssignExec && styles.disabledBtn}`}
                                             labelName={isLoadingAssignExec ? (
                                                 <div className="g-loading-info">
                                                     <p>{t('load.assign')}</p>
@@ -190,21 +171,53 @@ export default function BidInfo({
                     </div>
                 )}
 
-                {isAuthor && orderStatus === "pending" && order.selected_bid === bidId && (
+                <div className={styles.orderBlock}>
+                    {isAuthor && orderStatus === "pending" && order.selected_bid === bidId && (
 
-                    <ActionConfirm
-                        buttonClass={`${styles.DeclineOffer} ${isLoadingUnAssignExec && styles.disabledBtn}`}
-                        labelName={isLoadingUnAssignExec ? (
-                            <div className="g-loading-info">
-                                <p>{t('load.unassign')}</p>
-                                <span className="dots">
-                                    <span>.</span><span>.</span><span>.</span>
-                                </span>
-                            </div>
-                        ) : t('order_message.decline_choice')}
-                        confirmMessage={t('order_message.confirm_decline_offer')}
-                        onConfirm={() => handleUnAssignExecutor(order.id)} />
-                )}
+                        <ActionConfirm
+                            buttonClass={`${styles.DeclineOffer} ${isLoadingUnAssignExec && styles.disabledBtn}`}
+                            labelName={isLoadingUnAssignExec ? (
+                                <div className="g-loading-info">
+                                    <p>{t('load.unassign')}</p>
+                                    <span className="dots">
+                                        <span>.</span><span>.</span><span>.</span>
+                                    </span>
+                                </div>
+                            ) : t('order_message.decline_choice')}
+                            confirmMessage={t('order_message.confirm_decline_offer')}
+                            onConfirm={() => handleUnAssignExecutor(order.id)} />
+                    )}
+
+                    {order.selected_bid && (isAuthor || userBidId === bidId) && (
+                        <Link to={`/chats/${order.chatId}`} className={styles.chatButton}>
+                            {t('orders.chat_with')} {isAuthor ? t('orders.with_executor') : t('orders.with_customer')}
+                        </Link>
+                    )}
+
+                    {userBidId === bidId && (
+                        <div className={styles.deleteZone}>
+                            {(orderStatus === "open") ? (
+                                <ActionConfirm
+                                    labelName={isLoadingDelBid ? (
+                                        <div className="g-loading-info">
+                                            <p>{t('load.delete')}</p>
+                                            <span className="dots">
+                                                <span>.</span><span>.</span><span>.</span>
+                                            </span>
+                                        </div>
+                                    ) : t('general.delete')}
+                                    confirmMessage={t('bids.confirm_delete')}
+                                    buttonClass={`${styles.deleteBtn} ${isLoadingDelBid && styles.disabledBtn}`}
+                                    onConfirm={() => handleDeleteBid(bidId)}
+                                />
+                            ) : (
+                                <p className={styles.lockText}>{t('error_message.order_approved_bid')}</p>
+                            )}
+                        </div>
+
+                    )}
+
+                </div>
 
                 {error && (
                     <div className={styles.ErrorMessage}>{error}</div>

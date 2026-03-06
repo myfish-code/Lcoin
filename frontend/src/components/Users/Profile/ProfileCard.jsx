@@ -1,4 +1,5 @@
 import styles from "./ProfileCard.module.css"
+import ReactDOM from 'react-dom';
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,6 +10,7 @@ import OrderCard from "../../Cards/OrderCard/OrderCard";
 import Pagination from "../../Ui/Pagination/Pagination";
 import Verification from "../../ModalWindow/Verification/Verification";
 import ErrorWindow from "../../Ui/ErrorWindow/ErrorWindow";
+import FAQ from "../../ModalWindow/FAQ/FAQ";
 
 export default function ProfileCard({ error, user, isOwner, orders, onCreateChat,
     currentRole, onTabChange,
@@ -30,6 +32,7 @@ export default function ProfileCard({ error, user, isOwner, orders, onCreateChat
     const [selectedLang, setSelectedLang] = useState(language);
     const [isOpenLangChange, setIsOpenLangChange] = useState(false);
 
+    const [coords, setCoords] = useState({ x: 0, y: 0 });
     const handleChatButton = async () => {
         onCreateChat();
     }
@@ -41,6 +44,11 @@ export default function ProfileCard({ error, user, isOwner, orders, onCreateChat
 
     const handleProfileTabChange = (tab) => {
         onTabChange(tab);
+    }
+
+    const handleOpenLangChange = (e) => {
+        setIsOpenLangChange(true);
+        setCoords({ x: e.clientX, y: e.clientY });
     }
 
     const handleApplyLang = () => {
@@ -60,6 +68,12 @@ export default function ProfileCard({ error, user, isOwner, orders, onCreateChat
             {error && (
                 <ErrorWindow error={error} />
             )}
+            {isOwner && (
+                <div className={styles.FAQcontainer}>
+                    <FAQ />
+                </div>
+            )}
+
             <RadioChoice
                 choices={choices}
                 currentStatus={currentRole}
@@ -69,23 +83,32 @@ export default function ProfileCard({ error, user, isOwner, orders, onCreateChat
                 <h2>{t('profile.username')}: {user.username}</h2>
                 {isOwner && (
                     <>
-                        <ul className={styles.LangBtn} onClick={() => setIsOpenLangChange(!isOpenLangChange)}>{language}</ul>
-                        {isOpenLangChange && (
-                            <div className={styles.LangOptionsView}>
-                                <select
-                                    name="language"
-                                    required
-                                    value={selectedLang}
-                                    onChange={(e) => setSelectedLang(e.target.value)}
-                                >
-                                    <option value="">-- {t('profile.selectLanguage')} --</option>
-                                    <option value="sk">Slovenčina</option>
-                                    <option value="en">English</option>
-                                    <option value="uk">Українська</option>
-                                    <option value="ru">Русский</option>
-                                </select>
-                                <button onClick={handleApplyLang}>{t('profile.apply')}</button>
-                            </div>
+                        <ul className={styles.LangBtn} onClick={(e) => handleOpenLangChange(e)}>{language}</ul>
+                        {isOpenLangChange && ReactDOM.createPortal (
+                            <div className={styles.overlay} onClick={() => setIsOpenLangChange(false)}>
+                                <div 
+                                    className={styles.LangOptionsView} 
+                                    onClick={(e) => e.stopPropagation()}
+                                    style={{
+                                        left: `${coords.x}px`,
+                                        top: `${coords.y}px`,
+                                        transform: 'translateX(calc(-100% - 10px))',
+                                    }}>
+                                    <select
+                                        name="language"
+                                        required
+                                        value={selectedLang}
+                                        onChange={(e) => setSelectedLang(e.target.value)}
+                                    >
+                                        <option value="">-- {t('profile.selectLanguage')} --</option>
+                                        <option value="sk">Slovenčina</option>
+                                        <option value="en">English</option>
+                                        <option value="uk">Українська</option>
+                                        <option value="ru">Русский</option>
+                                    </select>
+                                    <button onClick={handleApplyLang}>{t('profile.apply')}</button>
+                                </div>
+                            </div>, document.body
                         )}
                     </>
                 )}

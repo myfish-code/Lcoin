@@ -90,10 +90,9 @@ export default function BidInfo({
                         {author.username} {isUserBid && <span className={styles.meTag}>({t('general.you')})</span>}
                     </Link>
 
-                    {order.executor?.id === author.id && (
+                    {order.executor?.id === author.id ? (
                         <span className={styles.ExecutorBadge}>{t('general.selected')}</span>
-                    )}
-                    {order.selected_bid === bid.id && (
+                    ) : order.selected_bid === bid.id && (
                         <span className={styles.SelectedBidBadge}>{t('general.offer_send')}</span>
                     )}
                 </div>

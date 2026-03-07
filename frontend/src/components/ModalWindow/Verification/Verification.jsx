@@ -68,7 +68,10 @@ export default function Verification({ onSubmit }) {
                         </div>
 
                         <div className={styles.verifyInfo}>
-                            <p className={styles.securityNote}>{t('verify.security_note')}</p>
+                            <div className={styles.securityNote}>
+                                <p>{t('verify.security_note')}</p>
+                                <strong>{t('verify.ISIC_in_safe')}</strong>
+                            </div>
 
                             <div className={styles.benefitsBlock}>
                                 <p className={styles.benefitsTitle}>{t('verify.benefits_title')}</p>

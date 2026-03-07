@@ -292,6 +292,7 @@
         "step_1_title": "1. Upload a photo",
         "step_1_desc": "Please upload a clear photo of the front of your ISIC card as shown in the example.",
         "security_note": "This is required for community security and identity verification.",
+        "ISIC_in_safe": "*Your ISIC will not be visible to other users*",
         "benefits_title": "Benefits of verification:",
         "benefit_1": "«Verified» status in your profile",
         "benefit_2": "Your orders and bids will appear higher in the list",

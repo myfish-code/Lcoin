@@ -293,6 +293,7 @@
         "step_1_title": "1. Nahrajte fotografiu",
         "step_1_desc": "Nahrajte, prosím, jasnú fotografiu prednej strany vašej karty ISIC, ako je znázornené v príklade.",
         "security_note": "Je to potrebné pre bezpečnosť komunity a overenie vašej identity.",
+        "ISIC_in_safe": "*Váš preukaz ISIC nebude viditeľný pre ostatných používateľov*",
         "benefits_title": "Čo získate overením:",
         "benefit_1": "Status „Verified“ vo vašom profile",
         "benefit_2": "Vaše objednávky a ponuky budú v zozname vyššie",

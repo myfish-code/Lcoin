@@ -12,19 +12,47 @@
 }
 
 .header h1 {
-    font-size: 3.5rem;
+    max-width: 875px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 3em;
     font-weight: 800;
     margin-bottom: 20px;
     color: #ffffff;
     letter-spacing: -1px;
+    
 }
 
-.header p {
-    font-size: 1.25rem;
-    color: #b0b0b0; 
-    max-width: 700px;
+.headerText {
+    max-width: 850px;
     margin: 0 auto 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerText p {
+    font-size: 1.2rem;
+    color: #b0b0b0; 
+    line-height: 1.5;
+    margin: 0;
+}
+
+.headerText strong {
+    font-size: 1.25rem;
+    color: #fff;
     line-height: 1.6;
+}
+.headerText strong {
+    display: block; 
+    font-size: 1.4rem; 
+    color: #F5F5F5;
+    line-height: 1.4;
+}
+.headerText span {
+    display: block;
+    font-size: 1rem;
+    color: #666; 
+    font-style: italic;
 }
 
 .actionsBtn {
@@ -71,7 +99,7 @@
 .step {
     flex: 1;
     background: #2a2a2a; 
-    padding: 30px;
+    padding: 20px;
     border-radius: 20px;
     border: 1px solid #333;
     transition: transform 0.3s ease, border-color 0.3s ease;
@@ -86,6 +114,7 @@
     font-size: 1.3rem;
     margin-bottom: 15px;
     color: #3d5afe; 
+    white-space: nowrap;
 }
 
 .step p {
@@ -94,7 +123,7 @@
     font-size: 0.95rem;
 }
 
-@media (max-width: 916px) {
+@media (max-width: 950px) {
     .header h1 { font-size: 2.5rem; }
     .how_works { flex-direction: column; }
     .actionsBtn { flex-direction: column; }
@@ -102,5 +131,7 @@
 
 @media (max-width: 500px) {
     .header h1 { margin-top: 20px; font-size: 1.5rem; }
-    .header p {font-size: 1rem; }
+    .headerText p {font-size: 1rem; }
+    .headerText strong {font-size: 1rem; }
+    .headerText span {font-size: 0.8rem; }
 }

@@ -11,11 +11,15 @@ export default function Home() {
 
     return (
         <div className={styles.HomeContainer}>
-            <LanguageBar lang={lang}/>
-            
+            <LanguageBar lang={lang} />
+
             <div className={styles.header}>
                 <h1>{t('home.header')}</h1>
-                <p>{t('home.header_text')}</p>
+                <div className={styles.headerText}>
+                    <p>{t('home.header_text_1')}</p>
+                    <strong>{t('home.header_text_2')}</strong>
+                    <span>{t('home.header_text_3')}</span>
+                </div>
 
                 <div className={styles.actionsBtn}>
                     <Link to="/register">{t('home.register')}</Link>

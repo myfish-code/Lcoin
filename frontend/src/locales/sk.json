@@ -1,15 +1,17 @@
 {
     "home": {
         "header": "Lcoin: Slobodná platforma pre študentov",
-        "header_text": "Platforma pre študentov, kde nájdete pomoc so štúdiom alebo zarobíte na svojich vedomostiach. Žiadni sprostredkovatelia ani provízie — dohodnete sa priamo.",
+        "header_text_1": "Platforma pre študentov, kde môžete nájsť pomoc so štúdiom alebo ponúknuť svoje vedomosti na riešenie úloh.",
+        "header_text_2": "Uverejňuj úlohy alebo pomáhaj ostatným bez provízií a sprostredkovateľov.",
+        "header_text_3": "(viac podrobností v sekcii FAQ po registrácii)",
         "login": "Prihlásiť sa",
         "register": "Registrácia",
-        "subject_1": "1. Pridaj inzerát",
-        "text_1": "Prejdi do sekcie „Moje zákazky“, zadaj predmet, termín a svoju cenu.",
-        "subject_2": "2. Nájdi zákazku",
-        "text_2": "Použi filtre v „Hľadaní zákaziek“ a vyber si vhodnú úlohu.",
-        "subject_3": "3. Komunikuj priamo",
-        "text_3": "Dohodni si detaily a podmienky priamo v sekcii „Správy“."
+        "subject_1": "1. Zadaj objednávku",
+        "text_1": "Po registrácii prejdi do sekcie „Moje zákazky“, zadaj objednávku a uveď predmet, termín a cenu.",
+        "subject_2": "2. Nájdi objednávku",
+        "text_2": "Po registrácii nájdi objednávku pomocou „Filtrov“ v sekcii „Hľadať zákazky“.",
+        "subject_3": "3. Diskusia o objednávke",
+        "text_3": "Diskutuj o detailoch a dohodni sa v sekcii „Správy“."
     },
     "login": {
         "text_general": "Prihlásenie",

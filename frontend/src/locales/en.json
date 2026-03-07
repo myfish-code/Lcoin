@@ -1,15 +1,17 @@
 {
     "home": {
         "header": "Lcoin: A Free Platform for Students",
-        "header_text": "A platform for students to find study help or earn from your knowledge. No middleman, no commissions — you deal directly with each other.",
+        "header_text_1": "A platform for students where you can find study help or offer your knowledge to solve tasks.",
+        "header_text_2": "Post tasks or help others without commissions or middlemen.",
+        "header_text_3": "(more details in the FAQ section after registration)",
         "login": "Login",
-        "register": "Register",
-        "subject_1": "1. Post an ad",
-        "text_1": "Go to 'My Orders', specify the subject, deadline, and your price.",
+        "register": "Registration",
+        "subject_1": "1. Post an order",
+        "text_1": "After registration, go to the 'My Orders' section, post an order by specifying the subject, deadline, and price.",
         "subject_2": "2. Find an order",
-        "text_2": "Use filters in 'Search Orders' to pick the right task for you.",
-        "subject_3": "3. Chat directly",
-        "text_3": "Discuss details and make a deal right in the 'Messages' section."
+        "text_2": "After registration, find an order using 'Filters' in the 'Search orders' section.",
+        "subject_3": "3. Order discussion",
+        "text_3": "Discuss details and agree on terms in the 'Messages' section."
     },
     "login": {
         "text_general": "Login",

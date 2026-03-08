@@ -21,7 +21,7 @@ class Conversation(models.Model):
                                     blank=True,
                                     related_name="+")
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         ordering = ['-last_message__created_at', '-created_at']
@@ -30,7 +30,8 @@ class Conversation(models.Model):
 class Message(models.Model):
     chat = models.ForeignKey(Conversation,
                              on_delete=models.CASCADE,
-                             related_name="messages")
+                             related_name="messages",
+                             db_index=True)
     sender = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE,
                                related_name="sent_messages")
@@ -56,4 +57,4 @@ class Message(models.Model):
     final_price = models.PositiveIntegerField(null=True, blank=True)
     final_days = models.PositiveIntegerField(null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)

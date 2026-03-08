@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
-
+import uuid
+import os
 LANGUAGE_CHOICES = [
     ("en", "English"),
     ("ru", "Русский"),
@@ -16,6 +17,10 @@ STATUS_CHOICES = [
     ("rejected", "Отказано"),
 ]
 
+def get_verification_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join('verification_docs', filename)
 
 class Client(AbstractUser):
     coins = models.IntegerField(default=100)
@@ -31,10 +36,10 @@ class Client(AbstractUser):
     executor_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     verification_status = (
-        models.CharField(max_length=10, choices=STATUS_CHOICES, default="unverified")
+        models.CharField(max_length=10, choices=STATUS_CHOICES, default="unverified", db_index=True)
     )
     verification_photo = models.ImageField(
-        upload_to="verification_docs/%Y/%m/%d/",
+        upload_to=get_verification_path,
         blank=True,
         null=True,
         verbose_name="Фото для верификации",
@@ -46,4 +51,4 @@ class FeedBack(models.Model):
                                 on_delete=models.CASCADE,
                                   related_name='feedbacks')
     text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)

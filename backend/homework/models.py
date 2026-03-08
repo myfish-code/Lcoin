@@ -46,10 +46,10 @@ class HomeworkOrder(models.Model):
         null=True,
         verbose_name="Файл заказа"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     deadline_time = models.DateTimeField()
 
-    subject = models.CharField(max_length=10, choices=SUBJECT_CHOICES)
+    subject = models.CharField(max_length=10, choices=SUBJECT_CHOICES, db_index=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
                                   related_name='orders')
@@ -60,7 +60,7 @@ class HomeworkOrder(models.Model):
                                  on_delete=models.SET_NULL,
                                  related_name="taken_orders")
 
-    status = models.CharField(max_length=20, default="open", choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, default="open", choices=STATUS_CHOICES, db_index=True)
 
     selected_bid = models.ForeignKey('ResponseBid',
                                       null=True,
@@ -98,11 +98,11 @@ class ResponseBid(models.Model):
 
     status = models.CharField(max_length=20,
                               choices=status_choice,
-                              default="pending")
+                              default="pending", db_index=True)
     
     days_to_complete = models.PositiveIntegerField(default=1)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
 class OrderReview(models.Model):
 
@@ -128,7 +128,7 @@ class OrderReview(models.Model):
     
     review_type = models.CharField(max_length=10, choices=TYPES)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
 class OrderDispute(models.Model):
     STATUS_CHOICES = (
@@ -162,7 +162,8 @@ class OrderDispute(models.Model):
         max_length=20, 
         choices=STATUS_CHOICES, 
         default="open",
-        verbose_name="Статус спора"
+        verbose_name="Статус спора",
+        db_index=True
     )
 
     last_message = models.ForeignKey('DisputeMessage',
@@ -171,7 +172,7 @@ class OrderDispute(models.Model):
                                      blank=True)
     admin_decision = models.TextField(blank=True, null=True, verbose_name="Решение админа")
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
 class DisputeMessage(models.Model):
 
@@ -195,4 +196,4 @@ class DisputeMessage(models.Model):
                             choices=CHOICES,
                             default="user")
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)

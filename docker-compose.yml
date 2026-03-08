@@ -3,6 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15
+    command: postgres -c shared_buffers=1GB -c effective_cache_size=3GB
     env_file:
       - .env
     volumes:

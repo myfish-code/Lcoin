@@ -10,6 +10,7 @@ import LanguageBar from "../../LanguageBar/LanguageBar";
 export default function LoginForm({ onSubmit }) {
 
     const { t } = useTranslation();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -52,8 +53,9 @@ export default function LoginForm({ onSubmit }) {
             return;
         }
 
+        setIsLoading(true);
         const dataError = await onSubmit({ loginValue, passwordValue, language: lang });
-
+        setIsLoading(false);
         if (dataError) {
             setError(prev => ({
                 ...prev,
@@ -75,7 +77,7 @@ export default function LoginForm({ onSubmit }) {
     return (
         <div className={styles.Wrapper}>
             <form className={styles.LoginForm} onSubmit={handleSubmit}>
-                <LanguageBar lang={lang}/>
+                <LanguageBar lang={lang} />
                 <h2>{t('login.text_general')}</h2>
 
                 <div className={styles.inputWrapper}>
@@ -112,8 +114,15 @@ export default function LoginForm({ onSubmit }) {
                 </div>
 
 
-                <button className={styles.submitBtn} type="submit">
-                    {t('login.text_general1')}
+                <button className={`${styles.submitBtn} ${isLoading ? styles.disabledBtn : ''}`} type="submit">
+                    {isLoading ? (
+                        <div className="g-loading-info">
+                            <p>{t('login.text_general')}</p>
+                            <span className="dots">
+                                <span>.</span><span>.</span><span>.</span>
+                            </span>
+                        </div>
+                    ) : t('login.text_general1')}
                 </button>
 
                 {error.submitBtn && (

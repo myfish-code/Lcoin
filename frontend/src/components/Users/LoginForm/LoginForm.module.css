@@ -75,6 +75,9 @@
 }
 
 .submitBtn {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     margin-top: 1rem;
     padding: 14px;
     background: #ffffff;
@@ -91,6 +94,11 @@
     background: #e5e5e5;
 }
 
+.disabledBtn {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 .ErrorView {
     color: #ff4545;
     font-size: 0.8rem;

@@ -9,6 +9,8 @@ import LanguageBar from "../../LanguageBar/LanguageBar";
 export default function RegisterForm({ onSubmit }) {
     const { t } = useTranslation();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [showPassword1, setShowPassword1] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
 
@@ -68,8 +70,9 @@ export default function RegisterForm({ onSubmit }) {
             return;
         }
 
+        setIsLoading(true);
         const dataError = await onSubmit({ loginValue, passwordValue, password2Value, emailValue, language: lang });
-
+        setIsLoading(false);
         if (dataError) {
             setError(prev => ({ ...prev, submitBtn: t(`error_message.${dataError}`) }))
         } else {
@@ -94,7 +97,7 @@ export default function RegisterForm({ onSubmit }) {
         <div className={styles.Wrapper}>
 
             <form className={styles.RegisterForm} onSubmit={handleSubmit}>
-                <LanguageBar lang={lang}/>
+                <LanguageBar lang={lang} />
                 <h2>{t('register.text_general')}</h2>
 
                 <div className={styles.inputWrapper}>
@@ -154,7 +157,16 @@ export default function RegisterForm({ onSubmit }) {
                     )}
                 </div>
 
-                <button className={styles.submitBtn} type="submit">{t('register.text_general1')}</button>
+                <button className={`${styles.submitBtn} ${isLoading ? styles.disabledBtn : ''}`} type="submit">
+                    {isLoading ? (
+                        <div className="g-loading-info">
+                            <p>{t('register.text_general')}</p>
+                            <span className="dots">
+                                <span>.</span><span>.</span><span>.</span>
+                            </span>
+                        </div>
+                    ) : t('register.text_general1')}
+                </button>
                 {error.submitBtn && (
                     <p className={styles.ErrorView}>{error.submitBtn}</p>
                 )}

@@ -20,13 +20,13 @@ class OrderReviewAdmin(admin.ModelAdmin):
 
 @admin.register(OrderDispute)
 class OrderDisputeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'order__id', 'status', 'author', 'opponent')
+    list_display = ('id', 'order', 'status', 'author', 'opponent')
     list_filter = ('status',)
     search_fields = ('order__name',)
 
 @admin.register(DisputeMessage)
 class DisputeMessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'dispute__id', 'author', 'type', 'text_preview')                
+    list_display = ('id', 'dispute', 'author', 'type', 'text_preview')                
     list_filter = ('type',)
     search_fields = ('description', 'author__username')                
 

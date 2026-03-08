@@ -3,6 +3,8 @@ from django.db import models
 from django.conf import settings
 import uuid
 import os
+from django.utils import timezone
+
 LANGUAGE_CHOICES = [
     ("en", "English"),
     ("ru", "Русский"),
@@ -20,7 +22,16 @@ STATUS_CHOICES = [
 def get_verification_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{uuid.uuid4()}.{ext}"
-    return os.path.join('verification_docs', filename)
+
+    now = timezone.now()
+
+    return os.path.join(
+        'verification_docs', 
+        str(now.year), 
+        str(now.month), 
+        str(now.day), 
+        filename
+    )
 
 class Client(AbstractUser):
     coins = models.IntegerField(default=100)

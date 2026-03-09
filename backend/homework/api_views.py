@@ -657,6 +657,14 @@ class MyOrdersAPIView(APIView):
   
     def post(self, request):     
         
+        user = request.user
+
+        if user.verification_status == "unverified":
+            if HomeworkOrder.objects.filter(author=user).count() > 2:
+                return Response({
+                    "error": "unverified_limit_order"
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
         name = request.data.get("name")
         description = request.data.get("description")
         price = request.data.get("price")
@@ -812,6 +820,14 @@ class MyBidsAPIView(APIView):
 
     def post(self, request, order_id):
         
+        user = request.user
+
+        if user.verification_status == "unverified":
+            if ResponseBid.objects.filter(author=user).count() > 2:
+                return Response({
+                    "error": "unverified_limit_bid"
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
         order = get_object_or_404(HomeworkOrder.objects, id=order_id)
 
         if order.status not in ("open", "pending"):

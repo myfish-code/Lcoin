@@ -374,6 +374,8 @@
         "page_not_found_desc": "Zdá sa, že nemôžeme nájsť to, čo hľadáte. Možno bola adresa zmenená alebo stránka odstránená.",
         "go_back": "Vrátiť sa späť",
         "UNKNOWN_ERROR": "Neznáma chyba",
-        "Failed to fetch": "Chyba pri načítaní dát"
+        "Failed to fetch": "Chyba pri načítaní dát",
+        "unverified_limit_order": "Dosiahli ste limit objednávok pre hostí. Nahrajte svoj ISIC v profile a získajte neobmedzený prístup!",
+        "unverified_limit_bid": "Dosiahli ste limit ponúk pre hostí. Overte svoj ISIC v profile, aby ste mohli podávať ďalšie ponuky!"
     }
 }

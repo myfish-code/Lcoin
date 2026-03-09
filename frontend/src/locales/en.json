@@ -373,6 +373,8 @@
         "page_not_found_desc": "It looks like we can't find what you're looking for. The address might have been changed or the page was deleted.",
         "go_back": "Go back",
         "UNKNOWN_ERROR": "Unknown error",
-        "Failed to fetch": "Failed to fetch"
+        "Failed to fetch": "Failed to fetch",
+        "unverified_limit_order": "Order limit for guest users exceeded. Upload your ISIC in your profile to unlock all features!",
+        "unverified_limit_bid": "Bid limit for guest users exceeded. Verify your ISIC in your profile to continue placing bids!"
     }
 }

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import styles from "./ChatCard.module.css"
 import { useTranslation } from "react-i18next";
 
-export default function ChatCard ({chat, myId}) {
+export default function ChatCard({ chat, myId }) {
     const { t } = useTranslation();
 
     const navigate = useNavigate();
@@ -15,9 +15,18 @@ export default function ChatCard ({chat, myId}) {
     const handleClick = () => {
         navigate(`/chats/${chat.id}`)
     }
+
+    const navigateToPrifile = (e, id) => {
+        e.stopPropagation();
+        navigate(`/profile/${id}`);
+        
+    }
+
     return (
         <div className={styles.ChatCard} onClick={handleClick}>
-            <div className={styles.name}>{opponent.name}</div>
+            <div className={styles.name} onClick={(e) => navigateToPrifile(e, opponent.id)}>
+                {opponent.name}
+            </div>
 
             <div className={styles.lastMessage}>
                 {lastMsg ? (

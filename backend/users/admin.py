@@ -4,7 +4,9 @@ from users.models import Client, FeedBack
 
 @admin.register(Client)
 class CustomClientAdmin(UserAdmin):
-    list_display = ('username', 'email', 'verification_photo', 'verification_status', 'is_staff')
+    list_display = ('id', 'username', 'email', 'verification_photo', 'verification_status', 'is_staff')
+
+    ordering = ('-id',)
 
     list_filter = ('verification_status', 'is_staff', 'is_active', 'language')
     search_fields = ('username', 'email')
@@ -12,6 +14,7 @@ class CustomClientAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Специфичные поля клиента', {
             'fields': (
+                'id',
                 'coins', 
                 'language', 
                 'customer_rating', 
@@ -22,6 +25,8 @@ class CustomClientAdmin(UserAdmin):
             ),
         }),
     )
+
+    readonly_fields = ('id',)
     
 @admin.register(FeedBack)
 class FeedBackAdmin(admin.ModelAdmin):

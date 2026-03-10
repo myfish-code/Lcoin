@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import LanguageBar from "../../LanguageBar/LanguageBar";
+import googleIcon from "../../../assets/images/google_icon.png"
 
 export default function RegisterForm({ onSubmit }) {
     const { t } = useTranslation();
@@ -17,13 +18,11 @@ export default function RegisterForm({ onSubmit }) {
     const [loginValue, setLogin] = useState("");
     const [passwordValue, setPassword] = useState("");
     const [password2Value, setPassword2] = useState("");
-    const [emailValue, setEmail] = useState("");
 
     const [error, setError] = useState({
         username: null,
         password: null,
         password2: null,
-        email: null,
         submitBtn: null
     });
 
@@ -36,7 +35,6 @@ export default function RegisterForm({ onSubmit }) {
             username: null,
             password: null,
             password2: null,
-            email: null,
             submitBtn: null
         })
 
@@ -60,18 +58,13 @@ export default function RegisterForm({ onSubmit }) {
             return;
         }
 
-        if (!emailValue) {
-            setError(prev => ({ ...prev, email: t('error_message.email_empty') }))
-            return;
-        }
-
         if (password2Value !== passwordValue) {
             setError(prev => ({ ...prev, password2: t('error_message.password_no_match') }))
             return;
         }
 
         setIsLoading(true);
-        const dataError = await onSubmit({ loginValue, passwordValue, password2Value, emailValue, language: lang });
+        const dataError = await onSubmit({ loginValue, passwordValue, password2Value, language: lang });
         setIsLoading(false);
         if (dataError) {
             setError(prev => ({ ...prev, submitBtn: t(`error_message.${dataError}`) }))
@@ -80,7 +73,6 @@ export default function RegisterForm({ onSubmit }) {
                 username: null,
                 password: null,
                 password2: null,
-                email: null,
                 submitBtn: null
             })
         }
@@ -145,18 +137,6 @@ export default function RegisterForm({ onSubmit }) {
                     )}
                 </div>
 
-                <div className={styles.inputWrapper}>
-                    <input
-                        type="email"
-                        placeholder="email"
-                        value={emailValue}
-                        onChange={(e) => { setEmail(e.target.value) }}
-                    />
-                    {error.email && (
-                        <p className={styles.ErrorView}>{error.email}</p>
-                    )}
-                </div>
-
                 <button className={`${styles.submitBtn} ${isLoading ? styles.disabledBtn : ''}`} type="submit">
                     {isLoading ? (
                         <div className="g-loading-info">
@@ -165,7 +145,16 @@ export default function RegisterForm({ onSubmit }) {
                                 <span>.</span><span>.</span><span>.</span>
                             </span>
                         </div>
-                    ) : t('register.text_general1')}
+                    ) : (
+                        <div className={styles.registerText}>
+                            <img
+                                src={googleIcon}
+                                width="18"
+                                alt="Google"
+                            />
+                            {t('register.text_general1')}
+                        </div>
+                    )}
                 </button>
                 {error.submitBtn && (
                     <p className={styles.ErrorView}>{error.submitBtn}</p>

@@ -94,11 +94,60 @@
     background: #e5e5e5;
 }
 
+.Divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 1.5rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.Divider::before,
+.Divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #333; /* Цвет как у границ твоих инпутов */
+}
+
+.Divider span {
+    padding: 0 12px;
+}
+
+.GoogleBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px; 
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #dfdfdf;
+    border-radius: 10px; 
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.GoogleBtn:hover {
+    background: rgba(255, 255, 255, 0.1); 
+    border-color: #e5e5e5;
+}
+
+.GoogleBtn img {
+    display: block;
+}
+
 .disabledBtn {
     opacity: 0.6;
     cursor: not-allowed;
     pointer-events: none;
   }
+
+
 .ErrorView {
     color: #ff4545;
     font-size: 0.8rem;

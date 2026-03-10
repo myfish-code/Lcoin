@@ -1,9 +1,11 @@
-import { register } from "../../api/auth";
+
+import { preRegister } from "../../api/auth";
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import RegisterForm from "../../components/Users/RegisterForm/RegisterForm";
 
 import Loading from "../../components/Ui/Loading/Loading";
+const REACT_APP =  `${import.meta.env.VITE_GOOGLE_API_URL}`;
 
 export default function Register() {
 
@@ -16,20 +18,17 @@ export default function Register() {
         }
     }, [navigate])
 
-    const handleSubmit = async ({loginValue, passwordValue, password2Value, emailValue, language}) => {
+    const handleSubmit = async ({loginValue, passwordValue, password2Value, language}) => {
         
-        const data = await register(loginValue, passwordValue, password2Value, emailValue, language);
+        const data = await preRegister(loginValue, passwordValue, password2Value, language);
 
         if (data.error) {
             return data.error
         }
 
-        localStorage.setItem("access", data.access);
-        localStorage.setItem("refresh", data.refresh);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        navigate("/profile/me")
+        window.location.href = `${REACT_APP}/accounts/google/login/`;
 
-        return null
+        return null;
     }
 
     if (localStorage.getItem("access")) {

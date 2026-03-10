@@ -1,8 +1,10 @@
 import LoginForm from "../../components/Users/LoginForm/LoginForm";
-import { login } from "../../api/auth";
+import { login, loginGoogle } from "../../api/auth";
 import { useState, useEffect } from "react";
 import { replace, useNavigate } from 'react-router-dom';
 import Loading from "../../components/Ui/Loading/Loading";
+
+const REACT_APP =  `${import.meta.env.VITE_GOOGLE_API_URL}`;
 
 export default function Login() {
 
@@ -31,8 +33,13 @@ export default function Login() {
         return null;
     }
 
+    const handleLoginGoogle = async () => {
+
+        window.location.href = `${REACT_APP}/accounts/google/login/`;
+    }
+
     if (localStorage.getItem("access")) {
         return <Loading />
     }
-    return <LoginForm onSubmit={handleLogin}/>
+    return <LoginForm onSubmitBase={handleLogin} onSubmitGoogle={handleLoginGoogle}/>
 }

@@ -7,11 +7,13 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from "react-i18next";
 import LanguageBar from "../../LanguageBar/LanguageBar";
 
-export default function LoginForm({ onSubmit }) {
+import googleIcon from "../../../assets/images/google_icon.png"
+
+export default function LoginForm({ onSubmitBase, onSubmitGoogle }) {
 
     const { t } = useTranslation();
-    const [isLoading, setIsLoading] = useState(false);
-
+    const [isLoadingBase, setIsLoadingBase] = useState(false);
+    const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const [loginValue, setLogin] = useState("");
@@ -53,9 +55,9 @@ export default function LoginForm({ onSubmit }) {
             return;
         }
 
-        setIsLoading(true);
-        const dataError = await onSubmit({ loginValue, passwordValue, language: lang });
-        setIsLoading(false);
+        setIsLoadingBase(true);
+        const dataError = await onSubmitBase({ loginValue, passwordValue, language: lang });
+        setIsLoadingBase(false);
         if (dataError) {
             setError(prev => ({
                 ...prev,
@@ -67,6 +69,11 @@ export default function LoginForm({ onSubmit }) {
 
     }
 
+    const handleSubmitGoogle = async () => {
+        setIsLoadingGoogle(true);
+        await onSubmitGoogle();
+        setIsLoadingGoogle(false);
+    }
     const handleChangeLogin = (e) => {
         const value = e.target.value;
         if (value.length <= 20) {
@@ -114,8 +121,8 @@ export default function LoginForm({ onSubmit }) {
                 </div>
 
 
-                <button className={`${styles.submitBtn} ${isLoading ? styles.disabledBtn : ''}`} type="submit">
-                    {isLoading ? (
+                <button className={`${styles.submitBtn} ${(isLoadingBase || isLoadingGoogle) ? styles.disabledBtn : ''}`} type="submit">
+                    {isLoadingBase ? (
                         <div className="g-loading-info">
                             <p>{t('login.text_general')}</p>
                             <span className="dots">
@@ -128,6 +135,26 @@ export default function LoginForm({ onSubmit }) {
                 {error.submitBtn && (
                     <p className={styles.ErrorView}>{error.submitBtn}</p>
                 )}
+
+                <div className={styles.Divider}>
+                    <span>{t('login.or')}</span>
+                </div>
+
+                <button
+                    type="button"
+                    className={`${styles.GoogleBtn} ${(isLoadingBase || isLoadingGoogle) ? styles.disabledBtn : ''}`}
+                    onClick={() => handleSubmitGoogle()}
+                >
+                    <img width="18" src={googleIcon} alt="Login" />
+                    {isLoadingGoogle ? (
+                        <div className="g-loading-info">
+                            <p>{t('login.text_general')}</p>
+                            <span className="dots">
+                                <span>.</span><span>.</span><span>.</span>
+                            </span>
+                        </div>
+                    ) : t('login.by_google')}
+                </button>
 
                 <div className={styles.AuthNavigation}>
                     <span>{t('login.no_account')}</span>

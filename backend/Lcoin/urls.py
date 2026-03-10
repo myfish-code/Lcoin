@@ -19,9 +19,13 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf import settings             
 from django.conf.urls.static import static
+from users.api_views import AuthSuccessAPIView
 
 urlpatterns = [
     path('secret-panel-oleh/', admin.site.urls),
+    path('api/auth-success/', AuthSuccessAPIView.as_view(), name='auth_success'), 
+    
+    path('accounts/', include('allauth.urls')),
     path('api/', include('Lcoin.api_urls')),
 
 ]

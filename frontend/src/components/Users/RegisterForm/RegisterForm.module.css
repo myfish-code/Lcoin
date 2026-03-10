@@ -98,6 +98,13 @@
     pointer-events: none;
   }
 
+.registerText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px
+}
+
 .ErrorView {
     color: #ff4545;
     font-size: 0.8rem;

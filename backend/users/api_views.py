@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user
 import math
-from pydoc import text
-
+from django.shortcuts import redirect
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from users.models import Client, FeedBack
@@ -16,6 +17,12 @@ from homework.serializers import HomeworkOrderSerializer, OrderReviewSerializer
 from users.serializers import ClientSerializer
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+import json
+from django.utils.http import urlencode
+from django.conf import settings
+
+frontend_success_url = f"{settings.FRONTEND_URL}/auth-success"
+frontend_login_url = f"{settings.FRONTEND_URL}/login"
 
 class LoginAPIView(APIView):
     def post(self, request):
@@ -43,6 +50,57 @@ class LoginAPIView(APIView):
             "user": ClientSerializer(user).data
             })
 
+class PreRegisterAPIView(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        password2 = request.data.get("password2")
+        language = request.data.get("language")
+        if not language:
+            language = "sk" 
+        if (not username or not password or not password2):
+            return Response({"error": "no_all_data"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if password != password2:
+            return Response({"error": "password_no_match"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if Client.objects.filter(username=username).exists():
+            return Response({"error": "user_has"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.session['pending_login'] = username
+        request.session['pending_password'] = password
+        request.session['pending_lang'] = language
+        request.session.modified = True 
+        request.session.save() 
+
+        return Response({
+            "status": "ok"
+        }, status=status.HTTP_200_OK)
+
+class AuthSuccessAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        user = get_user(request)
+
+        if user.is_authenticated:
+            refresh = RefreshToken.for_user(user)
+            access = str(refresh.access_token)
+            serializer = ClientSerializer(user, context={'request': request})
+            user_json = json.dumps(serializer.data)
+            refresh_token = str(refresh)
+
+
+            params = urlencode({
+                "access": access,
+                "refresh": refresh_token,
+                "user": user_json
+            })
+            
+            response = redirect(f"{settings.NORMAL_FRONTEND_URL}/auth-success/?{params}")
+            return response
+        return redirect(f"{settings.NORMAL_FRONTEND_URL}/login/?error=auth_failed")
+    
 class RegisterAPIView(APIView):
     def post(self, request):
         username = request.data.get("username")

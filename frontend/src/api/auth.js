@@ -10,11 +10,22 @@ export async function login(username, password, language) {
     return res.json()
 }
 
-export async function register(username, password, password2, email, language) {
-    const res = await fetch(`${API_URL}register/`, {
+export async function loginGoogle() {
+    
+    const res = await fetch(`${API_URL}login-google/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({username, password, password2, email, language})
+        credentials: "include",
+    })
+    return res.json()
+}
+
+export async function preRegister(username, password, password2, language) {
+    const res = await fetch(`${API_URL}pre-register/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", 
+        body: JSON.stringify({username, password, password2, language})
 
     })
     return res.json()

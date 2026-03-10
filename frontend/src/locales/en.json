@@ -17,7 +17,9 @@
         "text_general": "Login",
         "text_general1": "Sign In",
         "no_account": "Don't have an account?",
-        "register": "Register"
+        "register": "Register",
+        "or": "Or",
+        "by_google": "Sign in with Google"
     },
     "register": {
         "text_general": "Registration",

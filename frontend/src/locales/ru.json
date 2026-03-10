@@ -17,7 +17,9 @@
         "text_general": "Вход",
         "text_general1": "Войти",
         "no_account": "Нет аккаунта?",
-        "register": "Зарегистрироваться"
+        "register": "Зарегистрироваться",
+        "or": "Или",
+        "by_google": "Войти через Google"
     },
     "register": {
         "text_general": "Регистрация",

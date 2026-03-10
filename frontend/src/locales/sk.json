@@ -17,7 +17,9 @@
         "text_general": "Prihlásenie",
         "text_general1": "Prihlásiť sa",
         "no_account": "Nemáte účet?",
-        "register": "Zaregistrovať sa"
+        "register": "Zaregistrovať sa",
+        "or": "Alebo",
+        "by_google": "Prihlásiť sa cez Google"
     },
     "register": {
         "text_general": "Registrácia",

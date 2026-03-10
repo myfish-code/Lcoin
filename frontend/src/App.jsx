@@ -19,6 +19,7 @@ import ChatDetail from "./pages/chats/ChatDetail";
 import MyDisputes from "./pages/homework/Disputes/MyDisputes";
 import MyDisputesDetail from "./pages/homework/Disputes/DisputesDetail";
 import NotFoundPage from "./components/Ui/NotFoundPage/NotFoundPage";
+import AuthSuccess from "./pages/users/AuthSucces";
 
 export default function App() {
   return (
@@ -27,7 +28,7 @@ export default function App() {
         <Route path="/" element= {<Home />}/>
         <Route path="/login" element= {<Login />} />
         <Route path="/register" element= {<Register />} />
-
+        <Route path="/auth-success" element={<AuthSuccess />} />
         <Route element={<MainLayout />}>
           <Route path="/profile" element={<Navigate to="/profile/me" replace />} />
           <Route path="/profile/:userId" element={<Profile />} />

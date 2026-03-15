@@ -1,7 +1,6 @@
 from django.urls import path
 from users.api_views import (
     LoginAPIView,
-    RegisterAPIView,
     ProfileAPIView, 
     LanguageAPIView,
     VerifyPhotoAPIView,
@@ -13,7 +12,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
     path('login/', LoginAPIView.as_view()),
     path('pre-register/', PreRegisterAPIView.as_view()),
-    path('register/', RegisterAPIView.as_view()),
     path('profile/<int:user_id>/<str:choice_info>/', ProfileAPIView.as_view()),
     path('change-language/', LanguageAPIView.as_view()),
     path('change-language/<str:lang>/', LanguageAPIView.as_view()),

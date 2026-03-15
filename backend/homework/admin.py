@@ -3,7 +3,7 @@ from homework.models import HomeworkOrder, ResponseBid, OrderDispute, OrderRevie
 
 @admin.register(HomeworkOrder)
 class HomeworkOrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'subject', 'price', 'status', 'author', 'executor')
+    list_display = ('id', 'name', 'subject', 'price', 'status', 'author', 'executor', 'created_at')
     list_filter = ('status', 'subject')
     search_fields = ('id', 'name', 'description')
 

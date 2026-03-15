@@ -100,48 +100,6 @@ class AuthSuccessAPIView(APIView):
             response = redirect(f"{settings.NORMAL_FRONTEND_URL}/auth-success/?{params}")
             return response
         return redirect(f"{settings.NORMAL_FRONTEND_URL}/login/?error=auth_failed")
-    
-class RegisterAPIView(APIView):
-    def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        password2 = request.data.get("password2")
-
-        email = request.data.get("email")
-        language = request.data.get("language")
-        if not language:
-            language = "sk" 
-        if (not username or not password or not password2 or not email):
-            return Response({"error": "no_all_data"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        if password != password2:
-            return Response({"error": "password_no_match"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            with transaction.atomic():
-                if Client.objects.filter(username=username).exists():
-                    return Response({"error": "user_has"}, status=status.HTTP_400_BAD_REQUEST)
-
-                if Client.objects.filter(email=email).exists():
-                    return Response({"error": "email_has"}, status=status.HTTP_400_BAD_REQUEST)
-
-                user = Client.objects.create_user(
-                    username=username,
-                    password=password,
-                    email=email,
-                    language=language
-                )
-
-                refresh = RefreshToken.for_user(user)
-
-                return Response({
-                    "access": str(refresh.access_token),
-                    "refresh": str(refresh),
-                    "user": ClientSerializer(user).data
-                    }, status=status.HTTP_201_CREATED)
-        except:
-            
-            return Response({"error": "error_register"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ProfileAPIView(APIView):

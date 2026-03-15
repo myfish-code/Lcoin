@@ -164,9 +164,7 @@ STORAGES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=["http://localhost:5173"])
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = not DEBUG  # На локалке будет False (это ок), на сервере True
 CSRF_COOKIE_SAMESITE = 'Lax'
@@ -202,7 +200,7 @@ AUTHENTICATION_BACKENDS = [
 FRONTEND_URL = env('FRONTEND_URL')
 NORMAL_FRONTEND_URL = env('NORMAL_FRONTEND_URL')
 
-CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=["https://lcoin.eu"])
 SESSION_COOKIE_DOMAIN = None
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
@@ -219,3 +217,11 @@ SIMPLE_JWT = {
 
 
 SITE_ID = 1
+
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
